@@ -4,122 +4,76 @@
 
 
 Проект структуры БД для бота:
-```mysql-- ---
--- Globals
--- ---
+```dbml
 
--- SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
--- SET FOREIGN_KEY_CHECKS=0;
+Table users {
+  user_id integer [pk, unique]
+  status user_landing [not null]
+  user_discord_uid varchar(256) [null]
+  user_name varchar(256) [null]
+  user_steam_uid varchar(256) [null]
+  user_timezone varchar(256) [null, default: `Europe/Tallinn`]
+  user_invite_id integer
+  services_vpn_us boolean [default: false]
+  services_vpn_ee boolean [default: false]
+  user_date_created timestamp [default: `now()`]
+  user_date_updated timestamp [null]
+  user_date_deleted timestamp [null]
+}
 
--- ---
--- Table 'list_comedations'
--- List of the server achievements and commendations.
--- ---
+enum user_landing {
+  general
+  glitterbeard
+  minecraftrpg
+}
 
-DROP TABLE IF EXISTS `list_comedations`;
-		
-CREATE TABLE `list_comedations` (
-  `commendation_id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `commendation_code` VARCHAR(64) NOT NULL,
-  `commendation_title` VARCHAR(256) NULL DEFAULT NULL,
-  `commendation_description` VARCHAR(256) NULL DEFAULT NULL,
-  `commendation_type` ENUM NULL DEFAULT general,
-  `commendation_game_code` INTEGER NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`commendation_id`)
-) COMMENT 'List of the server achievements and commendations.';
+Table user_commendations {
+  record_id integer [pk, unique]
+  user_discord_uid varchar(256) [not null]
+  commendation_code varchar(64) [not null]
+  user_id_created integer [ref: > users.user_id]
+  date_created timestamp [default: `now()`]
+}
 
--- ---
--- Table 'users'
--- Tables with server users data
--- ---
+Table user_games {
+  record_id integer [pk, unique]
+  game_user_id integer [ref: > users.user_id]
+  steam_game_code varchar(64) [not null]
+  date_created timestamp [default: `now()`] 
+}
 
-DROP TABLE IF EXISTS `users`;
-		
-CREATE TABLE `users` (
-  `user_id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `user_landing` ENUM NOT NULL DEFAULT general,
-  `user_discord_uid` VARCHAR(256) NULL DEFAULT NULL,
-  `user_name` VARCHAR(256) NULL DEFAULT NULL,
-  `user_steam_uid` VARCHAR(128) NULL DEFAULT NULL,
-  `user_timezone` VARCHAR(128) NOT NULL DEFAULT 'Europe/Tallinn',
-  `user_invite_id` INTEGER NULL DEFAULT NULL,
-  `services_vpn_us` BINARY(1) NOT NULL DEFAULT '0',
-  `services_vpn_ee` BINARY(1) NOT NULL DEFAULT '0',
-  `user_date_created` TIMESTAMP NOT NULL AUTO_INCREMENT,
-  `user_date_updated` TIMESTAMP NULL DEFAULT NULL,
-  `user_date_deleted` TIMESTAMP NULL DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
-) COMMENT 'Tables with server users data';
+Table invites {
+  invite_id integer [pk, unique]
+  invite_code varchar(64) [not null]
+  user_id_created integer [ref: > users.user_id]
+  invite_user_ip varchar(128) [null]
+  invite_user_story varchar(256) [null]
+  invite_used boolean [default: false]
+  invite_blocked boolean [default: false]
+  invite_date_created timestamp [default: `now()`]
+  invite_date_used timestamp [null]
+}
 
--- ---
--- Table 'invites'
--- 
--- ---
+Table list_comedations {
+  commendation_id integer [pk, unique]
+  commendation_code varchar(64) [not null]
+  commendation_title varchar(128) [not null]
+  commendation_description  varchar(256) [not null]
+  status commendation_type 
+  steam_game_code varchar(64) [null]
+}
 
-DROP TABLE IF EXISTS `invites`;
-		
-CREATE TABLE `invites` (
-  `invite_id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `invite_code` VARCHAR(128) NOT NULL,
-  `user_id_created` INTEGER NOT NULL AUTO_INCREMENT,
-  `invite_user_ip` VARCHAR(256) NULL DEFAULT NULL,
-  `invite_user_story` VARCHAR(256) NULL DEFAULT NULL,
-  `invite_used` BINARY NOT NULL DEFAULT '0',
-  `invite_blocked` BINARY NOT NULL DEFAULT '0',
-  `invite_date_created` TIMESTAMP NOT NULL AUTO_INCREMENT,
-  `invite_date_used` DATETIME NULL DEFAULT NULL,
-  PRIMARY KEY (`invite_id`)
-);
+Table list_games {
+  record_id integer [pk, unique]
+  steam_game_code varchar(64) [not null]
+  steam_game_title varchar(256) [not null]
+  date_created timestamp [default: `now()`]
+}
 
--- ---
--- Table 'user_comendations'
--- 
--- ---
+enum commendation_type {
+  general
+  special
+  ingame
+}
 
-DROP TABLE IF EXISTS `user_comendations`;
-		
-CREATE TABLE `user_comendations` (
-  `record_id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `user_id` INTEGER NOT NULL AUTO_INCREMENT,
-  `commendation_id` INTEGER NOT NULL AUTO_INCREMENT,
-  `user_id_created` INTEGER NOT NULL AUTO_INCREMENT,
-  `date_created` TIMESTAMP NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`record_id`)
-);
-
--- ---
--- Table 'user_games'
--- List of the games tha users has been installed
--- ---
-
-DROP TABLE IF EXISTS `user_games`;
-		
-CREATE TABLE `user_games` (
-  `record_id` INTEGER NOT NULL AUTO_INCREMENT,
-  `user_id` INTEGER NOT NULL AUTO_INCREMENT,
-  `steam_game_code` VARCHAR(64) NOT NULL,
-  `record_added` TIMESTAMP NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`record_id`)
-) COMMENT 'List of the games tha users has been installed';
-
--- ---
--- Foreign Keys 
--- ---
-
-ALTER TABLE `users` ADD FOREIGN KEY (user_invite_id) REFERENCES `invites` (`invite_id`);
-ALTER TABLE `invites` ADD FOREIGN KEY (user_id_created) REFERENCES `users` (`user_id`);
-ALTER TABLE `user_comendations` ADD FOREIGN KEY (user_id) REFERENCES `users` (`user_id`);
-ALTER TABLE `user_comendations` ADD FOREIGN KEY (commendation_id) REFERENCES `list_comedations` (`commendation_id`);
-ALTER TABLE `user_comendations` ADD FOREIGN KEY (user_id_created) REFERENCES `users` (`user_id`);
-ALTER TABLE `user_games` ADD FOREIGN KEY (user_id) REFERENCES `users` (`user_id`);
-
--- ---
--- Table Properties
--- ---
-
--- ALTER TABLE `list_comedations` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `users` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `invites` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `user_comendations` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `user_games` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 ```
