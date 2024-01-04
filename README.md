@@ -58,12 +58,7 @@ Table invites {
   invite_date_used timestamp [null]
 }
 
-TableGroup Directories {
-  dir_comedations
-  dir_games
-}
-
-Table dir_comedations {
+Table dir_comedations [headercolor: #EBC743] {
   commendation_id integer [pk, unique]
   commendation_code varchar(64) [not null]
   commendation_title varchar(128) [not null]
@@ -72,7 +67,7 @@ Table dir_comedations {
   steam_game_code varchar(64) [null]
 }
 
-Table dir_games {
+Table dir_games [headercolor: #EBC743] {
   record_id integer [pk, unique]
   steam_game_code varchar(64) [not null]
   steam_game_title varchar(256) [not null]
