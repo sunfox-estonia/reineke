@@ -5,6 +5,11 @@
 
 Проект структуры БД для бота в формате DBML:
 ```dbml
+Project ReinekeDb {
+  database_type: 'MySQL'
+  Note: 'Database for Reineke Discord Bot'
+}
+
 Table users {
   user_id integer [pk, unique]
   status user_landing [not null]
