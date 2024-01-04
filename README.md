@@ -5,7 +5,6 @@
 
 Проект структуры БД для бота:
 ```dbml
-
 Table users {
   user_id integer [pk, unique]
   status user_landing [not null]
@@ -54,7 +53,12 @@ Table invites {
   invite_date_used timestamp [null]
 }
 
-Table list_comedations {
+TableGroup Directories {
+  dir_comedations
+  dir_games
+}
+
+Table dir_comedations {
   commendation_id integer [pk, unique]
   commendation_code varchar(64) [not null]
   commendation_title varchar(128) [not null]
@@ -63,7 +67,7 @@ Table list_comedations {
   steam_game_code varchar(64) [null]
 }
 
-Table list_games {
+Table dir_games {
   record_id integer [pk, unique]
   steam_game_code varchar(64) [not null]
   steam_game_title varchar(256) [not null]
@@ -75,5 +79,4 @@ enum commendation_type {
   special
   ingame
 }
-
 ```
