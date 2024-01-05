@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS `dir_games`;
 
 CREATE TABLE `users` (
   `user_id` integer UNIQUE PRIMARY KEY,
-  `status` ENUM ('general', 'glitterbeard', 'minecraftrpg') NOT NULL,
+  `user_landing` ENUM ('general', 'glitterbeard', 'minecraftrpg') NOT NULL,
   `user_discord_uid` varchar(256),
   `user_name` varchar(256),
   `user_steam_uid` varchar(256),
