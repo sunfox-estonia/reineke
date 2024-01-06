@@ -63,7 +63,7 @@ Table dir_comedations [headercolor: #EBC743] {
   commendation_code varchar(64) [not null]
   commendation_title varchar(128) [not null]
   commendation_description  varchar(256) [not null]
-  status commendation_type 
+  commendation_type commendation_type_list [not null, default: `general`]
   steam_game_code varchar(64) [null]
 }
 
@@ -74,7 +74,7 @@ Table dir_games [headercolor: #EBC743] {
   date_created timestamp [default: `now()`]
 }
 
-enum commendation_type {
+enum commendation_type_list {
   general
   special
   ingame
