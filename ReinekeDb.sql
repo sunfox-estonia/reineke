@@ -1,19 +1,6 @@
-SET NAMES utf8;
-SET time_zone = '+02:00';
-
-CREATE DATABASE `ReinekeDb` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `ReinekeDb`;
-
-DROP TABLE IF EXISTS `users`;
-DROP TABLE IF EXISTS `user_commendations`;
-DROP TABLE IF EXISTS `user_games`;
-DROP TABLE IF EXISTS `invites`;
-DROP TABLE IF EXISTS `dir_comedations`;
-DROP TABLE IF EXISTS `dir_games`;
-
 CREATE TABLE `users` (
   `user_id` integer UNIQUE PRIMARY KEY,
-  `user_landing` ENUM ('general', 'glitterbeard', 'minecraftrpg') NOT NULL,
+  `user_landing` ENUM ('general', 'glitterbeard', 'minecraftrpg') NOT NULL DEFAULT (general),
   `user_discord_uid` varchar(256),
   `user_name` varchar(256),
   `user_steam_uid` varchar(256),
@@ -58,7 +45,7 @@ CREATE TABLE `dir_comedations` (
   `commendation_code` varchar(64) NOT NULL,
   `commendation_title` varchar(128) NOT NULL,
   `commendation_description` varchar(256) NOT NULL,
-  `status` ENUM ('general', 'special', 'ingame'),
+  `commendation_type` ENUM ('general', 'special', 'ingame') NOT NULL DEFAULT (general),
   `steam_game_code` varchar(64)
 );
 
