@@ -12,7 +12,7 @@ Project ReinekeDb {
 
 Table users {
   user_id integer [pk, unique]
-  status user_landing [not null]
+  user_landing user_landing_list [not null, default: `general`]
   user_discord_uid varchar(256) [null]
   user_name varchar(256) [null]
   user_steam_uid varchar(256) [null]
@@ -25,7 +25,7 @@ Table users {
   user_date_deleted timestamp [null]
 }
 
-enum user_landing {
+enum user_landing_list {
   general
   glitterbeard
   minecraftrpg
