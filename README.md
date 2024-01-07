@@ -81,4 +81,5 @@ enum commendation_type_list {
 }
 ```
 
-Bsed on template: https://github.com/TFAGaming/DiscordJS-V14-Bot-Template
+Бот сделан ан базе шаблона:
+https://github.com/TFAGaming/DiscordJS-V14-Bot-Template
