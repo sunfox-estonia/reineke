@@ -39,6 +39,13 @@ Table user_commendations {
   date_created timestamp [default: `now()`]
 }
 
+Table user_levels {
+  record_id integer [pk, unique]
+  user_discord_uid varchar(256) [not null]
+  level_code varchar(64) [not null]
+  date_created timestamp [default: `now()`]
+}
+
 Table user_games {
   record_id integer [pk, unique]
   game_user_id integer [ref: > users.user_id]
@@ -65,6 +72,12 @@ Table dir_comedations [headercolor: #EBC743] {
   commendation_description  varchar(256) [not null]
   commendation_type commendation_type_list [not null, default: `general`]
   steam_game_code varchar(64) [null]
+}
+
+Table dir_levels [headercolor: #EBC743] {
+  level_id integer [pk, unique]
+  level_code varchar(64) [not null]
+  level_title varchar(128) [not null]
 }
 
 Table dir_games [headercolor: #EBC743] {
