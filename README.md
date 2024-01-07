@@ -80,3 +80,5 @@ enum commendation_type_list {
   ingame
 }
 ```
+
+Bsed on template: https://github.com/TFAGaming/DiscordJS-V14-Bot-Template
