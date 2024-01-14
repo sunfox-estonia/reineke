@@ -1,10 +1,10 @@
 CREATE TABLE `users` (
-  `user_id` integer UNIQUE PRIMARY KEY,
-  `user_landing` ENUM ('general', 'glitterbeard', 'minecraftrpg') NOT NULL DEFAULT (general),
+  `user_id` integer PRIMARY KEY,
+  `user_landing` ENUM ('common', 'glitterbeard', 'minecraftrpg') NOT NULL DEFAULT ('common'),
   `user_discord_uid` varchar(256),
   `user_name` varchar(256),
   `user_steam_uid` varchar(256),
-  `user_timezone` varchar(256) DEFAULT (Europe/Tallinn),
+  `user_timezone` varchar(256) DEFAULT ('Europe/Tallinn'),
   `user_invite_id` integer,
   `services_vpn_us` boolean DEFAULT false,
   `services_vpn_ee` boolean DEFAULT false,
@@ -14,7 +14,7 @@ CREATE TABLE `users` (
 );
 
 CREATE TABLE `user_commendations` (
-  `record_id` integer UNIQUE PRIMARY KEY,
+  `record_id` integer PRIMARY KEY,
   `user_discord_uid` varchar(256) NOT NULL,
   `commendation_code` varchar(64) NOT NULL,
   `user_id_created` integer,
@@ -22,14 +22,14 @@ CREATE TABLE `user_commendations` (
 );
 
 CREATE TABLE `user_games` (
-  `record_id` integer UNIQUE PRIMARY KEY,
+  `record_id` integer PRIMARY KEY,
   `game_user_id` integer,
   `steam_game_code` varchar(64) NOT NULL,
   `date_created` timestamp DEFAULT (now())
 );
 
 CREATE TABLE `invites` (
-  `invite_id` integer UNIQUE PRIMARY KEY,
+  `invite_id` integer PRIMARY KEY,
   `invite_code` varchar(64) NOT NULL,
   `user_id_created` integer,
   `invite_user_ip` varchar(128),
@@ -41,16 +41,17 @@ CREATE TABLE `invites` (
 );
 
 CREATE TABLE `dir_comedations` (
-  `commendation_id` integer UNIQUE PRIMARY KEY,
+  `commendation_id` integer PRIMARY KEY,
   `commendation_code` varchar(64) NOT NULL,
   `commendation_title` varchar(128) NOT NULL,
   `commendation_description` varchar(256) NOT NULL,
-  `commendation_type` ENUM ('general', 'special', 'ingame') NOT NULL DEFAULT (general),
+  `commendation_type` ENUM ('general', 'special', 'ingame') NOT NULL DEFAULT ('general'),
+  `commendation_pp` integer NOT NULL,
   `steam_game_code` varchar(64)
 );
 
 CREATE TABLE `dir_games` (
-  `record_id` integer UNIQUE PRIMARY KEY,
+  `record_id` integer PRIMARY KEY,
   `steam_game_code` varchar(64) NOT NULL,
   `steam_game_title` varchar(256) NOT NULL,
   `date_created` timestamp DEFAULT (now())
