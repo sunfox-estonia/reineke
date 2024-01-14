@@ -1,0 +1,27 @@
+{
+    "name": "Reineke Discord Bot",
+    "version": "1.0.0",
+    "description": "NodeJS приложение для управления Discord-сообществом Sunfox.ee. Бот создавался под определенный чат, и не является универсальным. Вы можете создать бота для своего сообщества на его основе.",
+    "main": "index.js",
+    "scripts": {
+      "bot.start": "node index.js",
+      "bot.install": "node deploy-commands.js"
+    },
+    "keywords": [],
+    "author": "Sunfox Communities NGO",
+    "license": "GNU",
+    "dependencies": {
+      "d20": "*",
+      "discord.js": "*",
+      "mysql.js": "*",
+      "fs": "*",
+      "events": "*",
+      "fecha": "*",
+      "steamapi":"*"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/SunfoxCommunities/reineke.git"
+    },
+    "devDependencies": {}
+  }
