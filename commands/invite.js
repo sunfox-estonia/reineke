@@ -1,5 +1,14 @@
 const { SlashCommandBuilder } = require('discord.js');
 const config = require('../config.json');
+const mysql = require('mysql');
+const database = mysql.createConnection({
+    host: config.db_config.host,
+    user: config.db_config.dbuser,
+    password: config.db_config.dbpass,
+    database: config.db_config.dbname,
+    debug: false,
+    multipleStatements: true,
+});
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,7 +20,7 @@ module.exports = {
                 .setRequired(false)
                 .addChoices(
                     { name: 'Glitterbeard Sailors', value: 'glitterbeard' },
-                    { name: 'Minecraft RPG', value: 'minecraft' }
+                    { name: 'Minecraft RPG', value: 'minecraftrpg' }
                 )),
 
     async execute(interaction) {
@@ -20,10 +29,10 @@ module.exports = {
         const creator_discord_user = interaction.member.user;
         const landing = interaction.options.getString('landing');
 
-        getInviteCreator(creator_discord_user.id, function (error) {
+        getInviteCreator(creator_discord_user.id, function (error, invite_creator_id) {
             if (error) {
                 const locales = {
-                    "en-US": 'The invitation link connot be created by current user.'
+                    "en-US": 'The invitation link cannot be created by current user.'
                 };
                 interaction.reply({ content: locales[interaction.locale] ?? error, ephemeral: true });
                 BotLogChannel.send({ content: `${creator_discord_user} is trying to create a new invite. Invite is not created.` });

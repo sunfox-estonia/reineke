@@ -8,22 +8,22 @@ const database = mysql.createConnection({
     database: config.db_config.dbname,
     debug: false,
     multipleStatements: true,
-  });
+});
 
 module.exports = {
-	name: Events.ClientReady,
-	once: true,
-	execute(client) {
-        database.connect(function(err) {
-                if (err) {
-                    return console.error('error: ' + err.message);
-                }
-                console.log('Connected to the MySQL server database '+ config.db_config.dbname +'@'+ config.db_config.host +'.');
-            });
-            console.log(`Logged in Discord as ${client.user.tag}!`);
+    name: Events.ClientReady,
+    once: true,
+    execute(client) {
+        database.connect(function (err) {
+            if (err) {
+                return console.error('error: ' + err.message);
+            }
+            console.log('Connected to the MySQL server database ' + config.db_config.dbname + '@' + config.db_config.host + '.');
+        });
+        console.log(`Logged in Discord as ${client.user.tag}!`);
 
-            client.channels.fetch(log_channels.log).then(channel => {
-                channel.send("Reineke bot is started!");
-            });
-	},
+        client.channels.fetch(log_channels.log).then(channel => {
+            channel.send("Reineke bot is started!");
+        });
+    },
 };
