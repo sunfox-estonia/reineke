@@ -1,5 +1,5 @@
 CREATE TABLE `users` (
-  `user_id` integer PRIMARY KEY,
+  `user_id` integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `user_landing` ENUM ('common', 'glitterbeard', 'minecraftrpg') NOT NULL DEFAULT ('common'),
   `user_discord_uid` varchar(256),
   `user_name` varchar(256),
@@ -14,7 +14,7 @@ CREATE TABLE `users` (
 );
 
 CREATE TABLE `user_commendations` (
-  `record_id` integer PRIMARY KEY,
+  `record_id` integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `user_discord_uid` varchar(256) NOT NULL,
   `commendation_code` varchar(64) NOT NULL,
   `user_id_created` integer,
@@ -22,14 +22,14 @@ CREATE TABLE `user_commendations` (
 );
 
 CREATE TABLE `user_games` (
-  `record_id` integer PRIMARY KEY,
+  `record_id` integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `game_user_id` integer,
   `steam_game_code` varchar(64) NOT NULL,
   `date_created` timestamp DEFAULT (now())
 );
 
 CREATE TABLE `invites` (
-  `invite_id` integer PRIMARY KEY,
+  `invite_id` integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `invite_code` varchar(64) NOT NULL,
   `user_id_created` integer,
   `invite_user_ip` varchar(128),
@@ -41,7 +41,7 @@ CREATE TABLE `invites` (
 );
 
 CREATE TABLE `dir_comedations` (
-  `commendation_id` integer PRIMARY KEY,
+  `commendation_id` integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `commendation_code` varchar(64) NOT NULL,
   `commendation_title` varchar(128) NOT NULL,
   `commendation_description` varchar(256) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE `dir_comedations` (
 );
 
 CREATE TABLE `dir_games` (
-  `record_id` integer PRIMARY KEY,
+  `record_id` integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `steam_game_code` varchar(64) NOT NULL,
   `steam_game_title` varchar(256) NOT NULL,
   `date_created` timestamp DEFAULT (now())
