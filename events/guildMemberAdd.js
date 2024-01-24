@@ -25,7 +25,7 @@ module.exports = {
             // Look through the invites, find the one for which the uses went up.
             const invite = newInvites.find(i => i.uses > oldInvites.get(i.code));
             // A real basic message with the information we need. 
-            BotLogChannel.send({ content: `${member.user} joined using invite code ${invite.code}.` })
+            BotLogChannel.send({ content: `${member.user} joined using invite code ${invite.code}.` });
         });
 
         /*
