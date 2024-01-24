@@ -29,7 +29,7 @@ Project ReinekeDb {
 }
 
 Table users {
-  user_id integer [pk, unique]
+  user_id integer [pk, unique, increment]
   user_landing user_landing_list [not null, default: `common`]
   user_discord_uid varchar(256) [null]
   user_name varchar(256) [null]
@@ -50,7 +50,7 @@ enum user_landing_list {
 }
 
 Table user_commendations {
-  record_id integer [pk, unique]
+  record_id integer [pk, unique, increment]
   user_discord_uid varchar(256) [not null]
   commendation_code varchar(64) [not null]
   user_id_created integer [ref: > users.user_id]
@@ -58,21 +58,21 @@ Table user_commendations {
 }
 
 Table user_levels {
-  record_id integer [pk, unique]
+  record_id integer [pk, unique, increment]
   user_discord_uid varchar(256) [not null]
   level_code varchar(64) [not null]
   date_created timestamp [default: `now()`]
 }
 
 Table user_games {
-  record_id integer [pk, unique]
+  record_id integer [pk, unique, increment]
   game_user_id integer [ref: > users.user_id]
   steam_game_code varchar(64) [not null]
   date_created timestamp [default: `now()`] 
 }
 
 Table invites {
-  invite_id integer [pk, unique]
+  invite_id integer [pk, unique, increment]
   invite_code varchar(64) [not null]
   user_id_created integer [ref: > users.user_id]
   invite_user_ip varchar(128) [null]
@@ -84,7 +84,7 @@ Table invites {
 }
 
 Table dir_comedations [headercolor: #EBC743] {
-  commendation_id integer [pk, unique]
+  commendation_id integer [pk, unique, increment]
   commendation_code varchar(64) [not null]
   commendation_title varchar(128) [not null]
   commendation_description  varchar(256) [not null]
@@ -94,13 +94,13 @@ Table dir_comedations [headercolor: #EBC743] {
 }
 
 Table dir_levels [headercolor: #EBC743] {
-  level_id integer [pk, unique]
+  level_id integer [pk, unique, increment]
   level_code varchar(64) [not null]
   level_title varchar(128) [not null]
 }
 
 Table dir_games [headercolor: #EBC743] {
-  record_id integer [pk, unique]
+  record_id integer [pk, unique, increment]
   steam_game_code varchar(64) [not null]
   steam_game_title varchar(256) [not null]
   date_created timestamp [default: `now()`]
@@ -112,6 +112,3 @@ enum commendation_type_list {
   ingame
 }
 ```
-
-Бот сделан ан базе шаблона:
-https://github.com/TFAGaming/DiscordJS-V14-Bot-Template

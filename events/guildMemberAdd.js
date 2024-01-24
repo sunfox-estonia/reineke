@@ -90,6 +90,7 @@ getInviteId = function (invite_code, callback) {
             callback(null, result_invite[0]);
         }
     });
+    // getInviteId closed
 }
 
 updateInvitedUser = function (user_invite_id, user_discord_uid, callback) {
@@ -101,6 +102,7 @@ updateInvitedUser = function (user_invite_id, user_discord_uid, callback) {
         }
         callback(null);
     });
+    // updateInvitedUser closed
 }
 
 /*
@@ -119,4 +121,5 @@ getInvitedUserData = function (user_invite_code, callback) {
             callback(null, result_user[0]);
         }
     });
+    // getInvitedUserData closed
 }
