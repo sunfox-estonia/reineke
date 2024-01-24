@@ -8,15 +8,28 @@
     "token": "your Discord bot token here",
     "client_id": "your Application ID here",
     "guild_id": "your Discord Server ID here",
-    "log_channels":{
-        "notifictions":"user notifications channel ID here",
-        "log":"bot system log channel ID here"
+    "log_channels": {
+        "notifictions": "user notifications channel ID here",
+        "log": "bot system log channel ID here"
     },
     "db_config": {
         "host": "localhost",
-        "dbname": "database title",
-        "dbuser": "database username",
-        "dbpass": "database user password"
+        "dbname": "reineke_WTvQfD",
+        "dbuser": "reineke_db_usr_WTvQfD",
+        "dbpass": "4XtOTDDec19ROsf2y0rLrtHG"
+    },
+    "roles": {
+        "newbie": "newbie role ID"
+    },
+    "colors": {
+        "primaryDark": "Primary Dark color",
+        "primaryBright": "Primary Bright color",
+        "secondary": "Secondary color"
+    },
+    "url": {
+        "landingUrl": "Joining to server page landing URL", // Needed for the invite link generation
+        "resourcesUrl": "Resources URL", // Needed to show resources like images etc.
+        "commonUrl": "Common URL" // Needed for common purposes
     }
 }
 ```
