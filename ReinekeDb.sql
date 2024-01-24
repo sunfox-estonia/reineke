@@ -1,3 +1,5 @@
+use `ReinekeDb`;
+
 CREATE TABLE `users` (
   `user_id` integer PRIMARY KEY AUTO_INCREMENT,
   `user_landing` ENUM ('common', 'glitterbeard', 'minecraftrpg') NOT NULL DEFAULT ('common'),
