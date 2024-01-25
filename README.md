@@ -125,3 +125,5 @@ enum commendation_type_list {
   ingame
 }
 ```
+
+Структуру БД смотри в файле ReinekeDb.sql.
