@@ -20,7 +20,8 @@ module.exports = {
                 .setRequired(false)
                 .addChoices(
                     { name: 'Glitterbeard Sailors', value: 'glitterbeard' },
-                    { name: 'Minecraft RPG', value: 'minecraftrpg' }
+                    { name: 'Virumaa Viikingid', value: 'viruviking' },
+                    { name: 'Minecraft RPG', value: 'minecraftrpg' },
                 )),
 
     async execute(interaction) {
@@ -44,15 +45,17 @@ module.exports = {
                 */
                 let invite = interaction.channel.createInvite( // Do we need to add `await` keyword here?
                     {
-                        maxAge: 1800000, // set 30 minutes to join
+                        maxAge: 7200, // set 2h
                         maxUses: 1 // maximum times invite can be used
                     }
                 ).catch(console.log);
                 switch (landing) {
                     case 'glitterbeard':
-                        var landingUrl = config.url.landingUrl + 'glitterbeards' + '/';
+                        var landingUrl = config.url.landingUrl + 'gs' + '/';
                         break;
-
+                    case 'viruviking':
+                        var landingUrl = config.url.landingUrl + 'vv' + '/';
+                        break;
                     default:
                         var landingUrl = config.url.landingUrl;
                         break;
@@ -69,7 +72,7 @@ module.exports = {
                         };
                         interaction.reply({ content: locales[interaction.locale] ?? error, ephemeral: true });
                     } else {
-                        var inviteUrl = landingUrl + 'invite/' + invite.code;
+                        var inviteUrl = landingUrl + 'i/' + invite.code;
                         interaction.reply({ content: '— Вот ссылка-приглашение на сервер: ' + inviteUrl, ephemeral: true });
                     }
                 });
