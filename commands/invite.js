@@ -14,6 +14,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('invite')
         .setDescription('Создать приглашение на сервер')
+        .setDescriptionLocalizations({
+            "en-US": 'Invite a friend to the server'
+        })
         .addStringOption(option =>
             option.setName('landing')
                 .setDescription('Страница с правилами сервера')

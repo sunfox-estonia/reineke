@@ -53,16 +53,9 @@ CREATE TABLE `dir_comedations` (
   `commendation_description` varchar(256) NOT NULL,
   `commendation_type` ENUM ('general', 'special', 'ingame') NOT NULL DEFAULT ('general'),
   `commendation_pp` integer NOT NULL,
+  `commendation_image` boolean DEFAULT false,
   `steam_game_code` varchar(64),
   INDEX (`commendation_id`)
-);
-
-CREATE TABLE `dir_games` (
-  `record_id` integer PRIMARY KEY AUTO_INCREMENT,
-  `steam_game_code` varchar(64) NOT NULL,
-  `steam_game_title` varchar(256) NOT NULL,
-  `date_created` timestamp DEFAULT (now()),
-  INDEX (`record_id`)
 );
 
 ALTER TABLE `user_commendations` ADD FOREIGN KEY (`user_id_created`) REFERENCES `users` (`user_id`);

@@ -22,8 +22,8 @@ module.exports = {
         });
         console.log(`Logged in Discord as ${client.user.tag}!`);
 
-        client.channels.fetch(log_channels.log).then(channel => {
-            channel.send("Reineke bot is started!");
+        client.channels.fetch(config.log_channels.log).then(channel => {
+            channel.send("Reineke management bot is started!");
         });
     },
 };

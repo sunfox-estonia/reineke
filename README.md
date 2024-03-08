@@ -2,7 +2,9 @@
 > Я, Лис Рейнеке, приветствую вас в моем удивительном Лесу! Здесь каждый день — новое приключение, и  с хитрым взглядом я бегу навстречу каждому из них. Ловкость и изобретательность — вот ключи к успеху в этом Лесу!
 > Я сопровождаю участников сервера Sunfox.ee в их приключениях в Море, на суше и в глубоких подземельях, в онлайне и в реальном мире. Не стесняйся обращаться ко мне за помощью и советом!
 
-Файл конфигурации config.json - размещается в корневой директории с файлами чат-бота Reineke:
+### Файлы конфигурации
+
+Основной файл конфигурации config.json - размещается в корневой директории с файлами чат-бота Reineke:
 ```json
 {
     "token": "your Discord bot token here",
@@ -14,12 +16,18 @@
     },
     "db_config": {
         "host": "localhost",
-        "dbname": "reineke_WTvQfD",
-        "dbuser": "reineke_db_usr_WTvQfD",
-        "dbpass": "4XtOTDDec19ROsf2y0rLrtHG"
+        "dbname": "database title",
+        "dbuser": "database username",
+        "dbpass": "database user password"
     },
     "roles": {
-        "newbie": "newbie role ID"
+        "level": {
+            "newbie": "newbie role ID"
+        },
+        "community": {
+            "glitterbeard": "glitterbeard role ID",
+            "viruviking": "viruviking role ID"
+        }
     },
     "colors": {
         "primaryDark": "Primary Dark color",
@@ -27,12 +35,38 @@
         "secondary": "Secondary color"
     },
     "url": {
-        "landingUrl": "Joining to server page landing URL", // Needed for the invite link generation
-        "resourcesUrl": "Resources URL", // Needed to show resources like images etc.
-        "commonUrl": "Common URL" // Needed for common purposes
+        "landingUrl": "Joining to server page landing URL",
+        "resourcesUrl": "Resources URL",
+        "commonUrl": "Common URL"
+    },
+    "ui": {
+        "icon_url": "Your bot icon URL here",
+        "title":    "Your server or bot title here"
+    },
+    "api": {
+        "steam": {
+            "token": "Your Steam API token here"
+        }
     }
 }
 ```
+Файл конфигурации со списками config.lists.json содержит несколько массивов данных: массив достижений, игр и доступных сервисов. Файл размещен в корневой директории проекта, примерная структура файла приведена далее:
+```json
+{
+  "comendations": [
+    { "name": "Посвящение в клоуны", "value": "101" },
+    { "name": "Общее дело", "value": "102" },
+  ],
+  "games": [
+    { "name": "Battlefield 1", "value": "1238840" },
+    { "name": "Dead by Daylight", "value": "381210" }
+  ],
+  "services": [
+    { "name": "Service title", "value": "Service code" }
+  ]
+}
+```
+
 
 Проект структуры БД для бота в формате DBML:
 ```dbml
@@ -103,20 +137,8 @@ Table dir_comedations [headercolor: #EBC743] {
   commendation_description  varchar(256) [not null]
   commendation_type commendation_type_list [not null, default: `general`]
   commendation_pp integer [not null]
+  commendation_image boolean [default: false]
   steam_game_code varchar(64) [null]
-}
-
-Table dir_levels [headercolor: #EBC743] {
-  level_id integer [pk, unique, increment]
-  level_code varchar(64) [not null]
-  level_title varchar(128) [not null]
-}
-
-Table dir_games [headercolor: #EBC743] {
-  record_id integer [pk, unique, increment]
-  steam_game_code varchar(64) [not null]
-  steam_game_title varchar(256) [not null]
-  date_created timestamp [default: `now()`]
 }
 
 enum commendation_type_list {

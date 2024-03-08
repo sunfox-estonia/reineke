@@ -17,7 +17,8 @@
       "fs": "*",
       "events": "*",
       "fecha": "*",
-      "steamapi":"*"
+      "steamapi":"*",
+      "moment":"*"
     },
     "repository": {
       "type": "git",

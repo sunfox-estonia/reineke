@@ -25,7 +25,7 @@ module.exports = {
             // Look through the invites, find the one for which the uses went up.
             const invite = newInvites.find(i => i.uses > oldInvites.get(i.code));
             // A real basic message with the information we need. 
-            BotLogChannel.send({ content: `${member.user} joined using invite code ${invite.code}.` });
+            BotLogChannel.send({ content: `JOIN: ${member.user} joined using invite code ${invite.code}.` });
         });
 
         /*
@@ -33,11 +33,11 @@ module.exports = {
         */
         getInviteId(invite.code, function (error, invite_id) {
             if (error) {
-                BotLogChannel.send({ content: `Invitation code ${invite.code} cannot be found in a database. User ${member.user} has been joined without going through Reineke.guildMemberAdd flow.` });
+                BotLogChannel.send({ content: `JOIN: Invitation code ${invite.code} cannot be found in a database. User ${member.user} has been joined without going through Reineke.guildMemberAdd flow.` });
             } else {
                 updateInvitedUser(invite_id, member.user.id, function (error) {
                     if (error) {
-                        BotLogChannel.send({ content: `Can't update ${member.user} record in a database. User has been joined without going through Reineke.guildMemberAdd flow.` });
+                        BotLogChannel.send({ content: `JOIN: Can't update ${member.user} record in a database. User has been joined without going through Reineke.guildMemberAdd flow.` });
                     } else {
                         /*
                         * Step 3. Add a role to user
@@ -49,7 +49,7 @@ module.exports = {
                         */
                         getInvitedUserData(invite.code, function (error, user_data) {
                             if (error) {
-                                BotLogChannel.send({ content: `Can't get user ${member.user} data. User has been joined without going through Reineke.guildMemberAdd flow.` });
+                                BotLogChannel.send({ content: `JOIN: Can't get user ${member.user} data. User has been joined without going through Reineke.guildMemberAdd flow.` });
                             } else {
 
                                 var embed_aboutme = {
@@ -65,8 +65,7 @@ module.exports = {
                                         text: "Reineke"
                                     }
                                 }
-
-                                BotLogChannel.send({ content: `К нам пришел ${member.user}, попривествуйте новичка! Кстати, он немного рассказал о себе:`, embeds: [embed_aboutme] });
+                                UserNotifyChannel.send({ content: `К нам пришел ${member.user}, попривествуйте новичка! Кстати, он немного рассказал о себе:`, embeds: [embed_aboutme] });
                             }
                         });
                     }
@@ -81,7 +80,7 @@ getInviteId = function (invite_code, callback) {
     let sql_join_1 = "SELECT invite_id FROM invites WHERE invite_code = ? LIMIT 1;";
     database.query(sql_join_1, [invite_code], (error_join_1, result_invite, fields) => {
         if (error_join_1) {
-            callback("Ошибка в работе базы данных.", null);
+            callback("Database error.", null);
             return;
         } else if (result_invite.length == 0 || result_invite.length > 1) {
             callback("Ошибка получения идентификатора приглашения.", null);
