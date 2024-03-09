@@ -18,7 +18,7 @@ const database = mysql.createConnection({
  */
 
 module.exports = {
-    name: Events.guildScheduledEventCreate,
+    name: Events.GuildScheduledEventCreate,
     async execute(event) {
         const NotificationsChannel = event.guild.channels.cache.get(config.log_channels.notifictions);
         const BotLogChannel = event.guild.channels.cache.get(config.log_channels.log);
