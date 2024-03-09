@@ -123,9 +123,20 @@ module.exports = {
             if (target_service_code.startsWith("1")) {
                 await interaction.guild.members.fetch(target_user).then(
                     DiscordUser => {
+                        switch (target_service_code) {
+                            case "101":
+                                var target_service_name = "US.vpn.snfx.ee";
+                                break;
+                            case "102":
+                                var target_service_name = "EE.vpn.snfx.ee";
+                                break;
+                            default:
+                                break;
+                        }
+
                         var modal_form = {
-                            "title": "Добавить сервис: VPN.snfx.ee",
-                            "custom_id": "admin_service",
+                            "title": "Добавить сервис: " + target_service_name,
+                            "custom_id": "service_add_vpn",
                             "components": [
                                 {
                                     "type": 1,

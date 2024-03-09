@@ -104,6 +104,13 @@ Table user_commendations {
   date_created timestamp [default: `now()`]
 }
 
+Table events_roles {
+  record_id integer [pk, unique, increment]
+  discord_event_id varchar(256) [not null]
+  discord_role_id varchar(256) [not null]
+  date_created timestamp [default: `now()`]
+}
+
 Table user_levels {
   record_id integer [pk, unique, increment]
   user_discord_uid varchar(256) [not null]

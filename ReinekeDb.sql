@@ -25,6 +25,14 @@ CREATE TABLE `user_commendations` (
   INDEX (`record_id`)
 );
 
+CREATE TABLE `events_roles` (
+  `record_id` integer PRIMARY KEY AUTO_INCREMENT,
+  `discord_event_id` varchar(256) NOT NULL,
+  `discord_role_id` varchar(256) NOT NULL,
+  `date_created` timestamp DEFAULT (now()),
+  INDEX (`record_id`)
+);
+
 CREATE TABLE `user_games` (
   `record_id` integer PRIMARY KEY AUTO_INCREMENT,
   `game_user_id` integer,
