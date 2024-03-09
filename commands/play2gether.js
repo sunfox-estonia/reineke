@@ -241,7 +241,7 @@ async execute(interaction) {
 										setTimeout(() => repliedMessage.delete(), 600000);
 									});
 							interaction.reply({ content: '— Приглашение на сбор рейда создано!', ephemeral: true });
-							BotLogChannel.send({ content: `PLAY2 SOT RAID: <@` + DiscordUser.user.id + `> has been created a play2gether invite` });
+							BotLogChannel.send({ content: `[PLAY2] SOT RAID: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite` });
 							
 					}else{
 						var invite_embed = new EmbedBuilder()
@@ -271,7 +271,7 @@ async execute(interaction) {
 								});
 								interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
 
-								BotLogChannel.send({ content: `PLAY2 SOT: <@` + DiscordUser.user.id + `> has been created a play2gether invite`});
+								BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite`});
 
 							} else {
 								// If profile is available   
@@ -309,7 +309,7 @@ async execute(interaction) {
 										setTimeout(() => repliedMessage.delete(), 600000);
 									});
 									interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
-									BotLogChannel.send({ content: `PLAY2 SOT: <@` + DiscordUser.user.id + `> has been created a play2gether invite.`});
+									BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite.`});
 
 								})
 								.catch(error => {
@@ -318,7 +318,7 @@ async execute(interaction) {
                                     });
                                     interaction.reply({ content: '— Приглашение создано!', ephemeral: true });
     
-                                    BotLogChannel.send({ content: `PLAY2 SOT: <@` + DiscordUser.user.id + `> has been created a play2gether invite, but Steam achievements has not been fetched.`});
+                                    BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite, but Steam achievements has not been fetched.`});
 								});
 							}
 						});
@@ -331,7 +331,7 @@ async execute(interaction) {
                 };
                 await interaction.reply(locales[interaction.locale] ?? 'У вас недостаточно прав для выполнения этой команды!');
 
-                BotLogChannel.send({ content: `ERROR: <@` + DiscordUser.user.id + `> can't create a **/play2gether sot** invite without permission.`});
+                BotLogChannel.send({ content: `[PLAY2] ERROR: <@` + DiscordUser.user.id + `> can't create a **/play2gether sot** invite without permission.`});
             }
         } else {
         /*
@@ -369,7 +369,7 @@ async execute(interaction) {
                             });
                             interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
 
-                            BotLogChannel.send({ content: `<@` + DiscordUser.user.id + `> creates a play2gether invite - ` + SteamApp.name });
+                            BotLogChannel.send({ content: `[PLAY2] <@` + DiscordUser.user.id + `> creates a **/play2gether** invite - ` + SteamApp.name });
                         });
                     } else {
                         steam.getUserSummary(steam_data.user_steam_uid).then(SteamUser => {
@@ -420,7 +420,7 @@ async execute(interaction) {
                                 });
                                 interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
 
-                                BotLogChannel.send({ content: `PLAY2: <@` + DiscordUser.user.id + `> creates a play2gether invite - ` + SteamApp.name });
+                                BotLogChannel.send({ content: `[PLAY2] <@` + DiscordUser.user.id + `> creates a **/play2gether** invite - ` + SteamApp.name });
                             });
 
                         });
