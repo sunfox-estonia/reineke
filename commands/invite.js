@@ -77,6 +77,8 @@ module.exports = {
                     } else {
                         var inviteUrl = landingUrl + 'i/' + invite.code;
                         interaction.reply({ content: '— Вот ссылка-приглашение на сервер: ' + inviteUrl, ephemeral: true });
+                        BotLogChannel.send({ content: `[INVITE] CREATE: An a new **/invite** has been created by: ${interaction.user.tag}.\n- Landing: ${landing}\n- Code: ${invite.code}`});
+                        return;
                     }
                 });
             }

@@ -121,6 +121,12 @@ module.exports = {
             const target_service_code = interaction.options.getString('service');
 
             if (target_service_code.startsWith("1")) {
+                /* VPN service form
+                 * Open modal to add a service for selected user.
+                 * Paste .ovpn file content to the service_data field.
+                 * In case if service is already added to user profile,
+                 * it will be replaced in a Database.
+                 */
                 await interaction.guild.members.fetch(target_user).then(
                     DiscordUser => {
                         switch (target_service_code) {
@@ -180,8 +186,63 @@ module.exports = {
                         }
                         interaction.showModal(modal_form);	
                     });
+            } else if (target_service_code === "999"){
+                /* Bifrost Connect service form
+                *  Open modal to add a service for selected user.
+                *  In case if Steam ID is already added to user profile, 
+                *  it will be replaced in a Database.
+                */
+                await interaction.guild.members.fetch(target_user).then(
+                    DiscordUser => {
+                        var modal_form = {
+                            "title": "Добавить сервис: Bifrost Connect",
+                            "custom_id": "service_add_bifrost",
+                            "components": [
+                                {
+                                    "type": 1,
+                                    "components": [{
+                                        "type": 4,
+                                        "custom_id": "service_user_id",
+                                        "label": "Discord ID пользователя:",
+                                        "style": 1,
+                                        "min_length": 1,
+                                        "max_length": 256,
+                                        "value": DiscordUser.id,
+                                        "required": true,
+                                    }]
+                                },
+                                {
+                                    "type": 1,
+                                    "components": [{
+                                        "type": 4,
+                                        "custom_id": "service_code",
+                                        "label": "Код сервиса:",
+                                        "style": 1,
+                                        "min_length": 1,
+                                        "max_length": 256,
+                                        "value": target_service_code,
+                                        "required": true
+                                    }]
+                                },
+                                {
+                                    "type": 1,
+                                    "components": [{
+                                        "type": 4,
+                                        "custom_id": "service_user_steam_id",
+                                        "label": "Steam ID пользователя:",
+                                        "style": 1,
+                                        "min_length": 1,
+                                        "max_length": 256,
+                                        "value": target_service_code,
+                                        "required": true
+                                    }]
+                                }
+                            ]
+                        }
+                        interaction.showModal(modal_form);	
+                    });
             } else {
-                interaction.reply({ content: "This service is currently not available.", ephemeral: true });
+                interaction.reply({ content: "This service is not available.", ephemeral: true });
             }
         }
     },
