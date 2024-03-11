@@ -1,5 +1,4 @@
 //const {} = require('discord.js');
-const { parse, format } = require('fecha');
 const config = require('../config.json');
 
 const mysql = require('mysql');
@@ -79,8 +78,6 @@ rewriteBifrost = function(UserDiscordUid, UserSteamUid, callback) {
     }); 
 // rewriteBifrost ended
 }
-
-
 
 checkBifrost = function (UserDiscordUid, callback) {
 	let sql3 = "SELECT count(*) AS rowscount FROM users WHERE user_discord_uid = ?;";

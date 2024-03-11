@@ -431,9 +431,9 @@ async execute(interaction) {
 	},
 };      
 
-getSteam = function (user_discord_uid, callback) {
+getSteam = function (UserDiscordUid, callback) {
     let sql1 = "SELECT user_discord_uid, user_steam_uid FROM users WHERE user_discord_uid = ? LIMIT 1;";
-    database.query(sql1, [user_discord_uid], (error1, result_userdata, fields) => {
+    database.query(sql1, [UserDiscordUid], (error1, result_userdata, fields) => {
         if (error1) {
             callback("Database error.", null);
             return;
@@ -464,9 +464,9 @@ fetchTimestamp = function (interval) {
     return unix_time;
 }
 
-getGameAchievements = function (user_discord_uid,game_id){
+getGameAchievements = function (UserDiscordUid,GameId){
     let sql2 = "";
-    database.query(sql2, [user_discord_uid,game_id], (error2, result_achdata, fields) => {
+    database.query(sql2, [UserDiscordUid,GameId], (error2, result_achdata, fields) => {
         if (error2) {
             callback("Database error.", null);
             return;
