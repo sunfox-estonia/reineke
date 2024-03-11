@@ -32,7 +32,7 @@ module.exports = {
                             return;
                         } else {
                             interaction.reply({ content: 'Steam ID updated successfully for user <@` + user_discord_id + `>..', ephemeral: true });
-                            BotLogChannel.send({ content: `[ADMIN] BIFROST: <@` + DiscordUser.user.id + `> Steam ID has been UPDATED by ${interaction.user.tag}.` });
+                            BotLogChannel.send({ content: `[ADMIN] BIFROST: <@` + user_discord_id + `> Steam ID has been UPDATED by ${interaction.user.tag}.` });
                             return;
                         }
                     });
@@ -43,7 +43,7 @@ module.exports = {
                             return;
                         } else {
                             interaction.reply({ content: `Steam ID added successfully for user <@` + user_discord_id + `>.`, ephemeral: true });
-                            BotLogChannel.send({ content: `[ADMIN] BIFROST: <@` + DiscordUser.user.id + `> Steam ID has been ADDED by ${interaction.user.tag}.` });
+                            BotLogChannel.send({ content: `[ADMIN] BIFROST: <@` + user_discord_id + `> Steam ID has been ADDED by ${interaction.user.tag}.` });
                             return;
                         }
                     });

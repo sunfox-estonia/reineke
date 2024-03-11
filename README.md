@@ -85,7 +85,7 @@ Table users {
   user_invite_id integer
   services_vpn_us boolean [default: false]
   services_vpn_ee boolean [default: false]
-  user_date_created timestamp [default: `now()`]
+  user_date_created timestamp [default: `CURRENT_TIMESTAMP`]
   user_date_updated timestamp [null]
   user_date_deleted timestamp [null]
 }
@@ -101,28 +101,28 @@ Table user_commendations {
   user_discord_uid varchar(256) [not null]
   commendation_code varchar(64) [not null]
   user_id_created integer [ref: > users.user_id]
-  date_created timestamp [default: `now()`]
+  date_created timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table events_roles {
   record_id integer [pk, unique, increment]
   discord_event_id varchar(256) [not null]
   discord_role_id varchar(256) [not null]
-  date_created timestamp [default: `now()`]
+  date_created timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table user_levels {
   record_id integer [pk, unique, increment]
   user_discord_uid varchar(256) [not null]
   level_code varchar(64) [not null]
-  date_created timestamp [default: `now()`]
+  date_created timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table user_games {
   record_id integer [pk, unique, increment]
   game_user_id integer [ref: > users.user_id]
   steam_game_code varchar(64) [not null]
-  date_created timestamp [default: `now()`] 
+  date_created timestamp [default: `CURRENT_TIMESTAMP`] 
 }
 
 Table invites {
@@ -133,7 +133,7 @@ Table invites {
   invite_user_story varchar(256) [null]
   invite_used boolean [default: false]
   invite_blocked boolean [default: false]
-  invite_date_created timestamp [default: `now()`]
+  invite_date_created timestamp [default: `CURRENT_TIMESTAMP`]
   invite_date_used timestamp [null]
 }
 
