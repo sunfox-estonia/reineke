@@ -21,7 +21,7 @@ CREATE TABLE `user_commendations` (
   `user_discord_uid` varchar(256) NOT NULL,
   `commendation_code` varchar(64) NOT NULL,
   `user_id_created` integer,
-  `date_created` timestamp DEFAULT DEFAULT CURRENT_TIMESTAMP,
+  `date_created` timestamp DEFAULT CURRENT_TIMESTAMP,
   INDEX (`record_id`)
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE `events_roles` (
   `record_id` integer PRIMARY KEY AUTO_INCREMENT,
   `discord_event_id` varchar(256) NOT NULL,
   `discord_role_id` varchar(256) NOT NULL,
-  `date_created` timestamp DEFAULT DEFAULT CURRENT_TIMESTAMP,
+  `date_created` timestamp DEFAULT CURRENT_TIMESTAMP,
   INDEX (`record_id`)
 );
 
@@ -37,7 +37,7 @@ CREATE TABLE `user_games` (
   `record_id` integer PRIMARY KEY AUTO_INCREMENT,
   `game_user_id` integer,
   `steam_game_code` varchar(64) NOT NULL,
-  `date_created` timestamp DEFAULT DEFAULT CURRENT_TIMESTAMP,
+  `date_created` timestamp DEFAULT CURRENT_TIMESTAMP,
   INDEX (`record_id`)
 );
 
@@ -49,7 +49,7 @@ CREATE TABLE `invites` (
   `invite_user_story` varchar(256),
   `invite_used` boolean DEFAULT false,
   `invite_blocked` boolean DEFAULT false,
-  `invite_date_created` timestamp DEFAULT DEFAULT CURRENT_TIMESTAMP,
+  `invite_date_created` timestamp DEFAULT CURRENT_TIMESTAMP,
   `invite_date_used` timestamp,
   INDEX (`invite_id`)
 );
@@ -62,7 +62,7 @@ CREATE TABLE `dir_comedations` (
   `commendation_type` ENUM ('general', 'special', 'ingame') NOT NULL DEFAULT ('general'),
   `commendation_pp` integer NOT NULL,
   `commendation_image` boolean DEFAULT false,
-  `steam_game_code` varchar(64),
+  `steam_game_code` varchar(64) DEFAULT NULL,
   INDEX (`commendation_id`)
 );
 

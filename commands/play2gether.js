@@ -20,7 +20,7 @@ const steam = new SteamAPI(config.api.steam.token);
  * the list of another possible games to play is located in a config.lists.json file
  * Current version can't find co-players withen the server members, this functionality
  * will be added in a future release, after Statistical bot release.
- * 
+ *
  */
 
 module.exports = {
@@ -215,13 +215,12 @@ async execute(interaction) {
                 }
 
                 await interaction.guild.members.fetch(interaction.member.user.id).then( DiscordUser => {
-                    var ship_user = DiscordUser.nickname ?? DiscordUser.user.username;
                     var time_to_go = fetchTimestamp(party_time);
 					if (ship_task === 'raid') {
-						
+
 						var invite_embed = new EmbedBuilder()
 							.setColor(config.colors.primaryBright)
-							.setAuthor({ name: ship_user + " собирает рейд.", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
+							.setAuthor({ name: DiscordUser.displayName + " собирает рейд.", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
 							.setDescription("Начало сессии - <t:" + time_to_go + ":R>")
 							.setThumbnail(config.url.resourcesUrl + "img/gb/" + img_ship_mission + ".png")
 							.addFields(
@@ -232,21 +231,21 @@ async execute(interaction) {
                                 { name: "<#" + party_channel + ">", value: "\u200b" }
 							)
 							.setTimestamp()
-							.setFooter({ 
+							.setFooter({
 								icon_url: config.ui.icon_url,
 								text: config.ui.title
 							});
-							
+
 							NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, начинается сбор рейда:`, embeds: [invite_embed] }).then(repliedMessage => {
 										setTimeout(() => repliedMessage.delete(), 600000);
 									});
 							interaction.reply({ content: '— Приглашение на сбор рейда создано!', ephemeral: true });
 							BotLogChannel.send({ content: `[PLAY2] SOT RAID: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite` });
-							
+
 					}else{
 						var invite_embed = new EmbedBuilder()
 							.setColor(config.colors.primaryBright)
-							.setAuthor({ name: ship_user + " собирает команду.", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
+							.setAuthor({ name: DiscordUser.displayName + " собирает команду.", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
 							.setDescription("Начало сессии - <t:" + time_to_go + ":R>")
 							.setThumbnail(config.url.resourcesUrl + "img/gb/" + img_ship_mission + ".png")
 							.addFields(
@@ -256,16 +255,16 @@ async execute(interaction) {
 								{ name: "<#" + party_channel + ">", value: "\u200b" }
 							)
 							.setTimestamp()
-							.setFooter({ 
+							.setFooter({
 								icon_url: config.ui.icon_url,
 								text: config.ui.title
 							});
 						/*
 						* Get Steam profile to show achievements in PVP
-						*/ 
+						*/
 						getSteam(interaction.member.user.id, function (error, steam_data) {
 							if (error) {
-								// If there is no Steam profile available		
+								// If there is no Steam profile available
 								NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed] }).then(repliedMessage => {
 									setTimeout(() => repliedMessage.delete(), 600000);
 								});
@@ -274,9 +273,9 @@ async execute(interaction) {
 								BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite`});
 
 							} else {
-								// If profile is available   
+								// If profile is available
 								// Here you can see full achievements list:
-								// http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v0002/?key=APIKEY&appid=1172620&l=english&format=json                         
+								// http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v0002/?key=APIKEY&appid=1172620&l=english&format=json
 								// Get specified achievements for Sea of Thieves
 								steam.getUserAchievements(steam_data.user_steam_uid, "1172620").then(UserAchievements => {
 									if (UserAchievements.steamID !== undefined) {
@@ -300,7 +299,7 @@ async execute(interaction) {
 										if (ship_task == "pvp_servants" || ship_task == "pvp_guardians") {
 											invite_embed.setImage(config.url.resourcesUrl + 'img/gb/' + BadgesImage);
 											invite_embed.addFields(
-												{ name: '\u200b', value: '**Достижения ' + ship_user + ' в режиме PvP:**' }
+												{ name: '\u200b', value: '**Достижения ' + DiscordUser.displayName + ' в режиме PvP:**' }
 											)
 										}
 									}
@@ -317,7 +316,7 @@ async execute(interaction) {
                                         setTimeout(() => repliedMessage.delete(), 600000);
                                     });
                                     interaction.reply({ content: '— Приглашение создано!', ephemeral: true });
-    
+
                                     BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite, but Steam achievements has not been fetched.`});
 								});
 							}
@@ -326,7 +325,7 @@ async execute(interaction) {
 					}
                 });
             } else {
-                const locales = {
+                let locales = {
                     "en-US": 'You do not have permission to execute this command!',
                 };
                 await interaction.reply(locales[interaction.locale] ?? 'У вас недостаточно прав для выполнения этой команды!');
@@ -338,28 +337,27 @@ async execute(interaction) {
          * ANOTHER GAME play together invite
          */
             await interaction.guild.members.fetch(interaction.member.user.id).then( DiscordUser => {
-                const play2_user = DiscordUser.nickname ?? DiscordUser.user.username;
                 const time_to_go = fetchTimestamp(party_time);
                 const steam_app_id = interaction.options.getString('game');
 
                 getSteam(interaction.member.user.id, function (error, steam_data) {
                     if (error) {
-                        // If there is no Steam profile available		
+                        // If there is no Steam profile available
 
-                        steam.getGameDetails(steam_app_id).then(SteamApp => {      
+                        steam.getGameDetails(steam_app_id).then(SteamApp => {
                             var invite_embed = new EmbedBuilder()
                                 .setColor(config.colors.primaryBright)
-                                .setAuthor({ name: play2_user + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
+                                .setAuthor({ name: DiscordUser.displayName + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
                                 .setDescription("Начало сессии - <t:" + time_to_go + ":R>")
                                 .setThumbnail(config.url.resourcesUrl + "img/bot/alert_playtogether.png")
                                 .setImage(SteamApp.header_image)
                                 .addFields(
-                                    { name: "Присоединяйся к игре!", value: "Чтобы играть вместе, Тебе необходимо установить **"+SteamApp.name+"** на свой компьютер, а также добавить **" + play2_user + "** в список друзей Steam." },
+                                    { name: "Присоединяйся к игре!", value: "Чтобы играть вместе, Тебе необходимо установить **"+SteamApp.name+"** на свой компьютер, а также добавить **" + DiscordUser.displayName + "** в список друзей Steam." },
                                     { name: "\u200b", value: "**Добавляйся в голосовой канал:**" },
                                     { name: "<#" + party_channel + ">", value: "\u200b" }
                                 )
                                 .setTimestamp()
-                                .setFooter({ 
+                                .setFooter({
                                     icon_url: config.ui.icon_url,
                                     text: config.ui.title
                                 });
@@ -374,8 +372,8 @@ async execute(interaction) {
                     } else {
                         steam.getUserSummary(steam_data.user_steam_uid).then(SteamUser => {
                             // Get Steam application data
-                            
-                            /* 
+
+                            /*
                              * Create an invite to play
                              */
 
@@ -387,21 +385,21 @@ async execute(interaction) {
                             /*
                              * Get game details from Steam
                              */
-                            steam.getGameDetails(steam_app_id).then(SteamApp => {      
+                            steam.getGameDetails(steam_app_id).then(SteamApp => {
                                 const BifrostUri = 'https://bifrost.snfx.ee/steam/'+SteamApp.steam_appid+'/'+SteamUser.steamID;
                                 var invite_embed = new EmbedBuilder()
                                     .setColor(config.colors.primaryBright)
-                                    .setAuthor({ name: play2_user + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
+                                    .setAuthor({ name: DiscordUser.displayName + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
                                     .setDescription("Начало сессии - <t:" + time_to_go + ":R>")
                                     .setThumbnail(config.url.resourcesUrl + "img/bot/alert_playtogether.png")
                                     .setImage(SteamApp.header_image)
                                     .addFields(
-                                        { name: "Присоединяйся к игре!", value: "Чтобы играть вместе, Тебе необходимо установить **"+SteamApp.name+"** на свой компьютер, а также добавить **" + play2_user + "** в список друзей Steam. Сделать это можно на странице по ссылке ниже." },
+                                        { name: "Присоединяйся к игре!", value: "Чтобы играть вместе, Тебе необходимо установить **"+SteamApp.name+"** на свой компьютер, а также добавить **" + DiscordUser.displayName + "** в список друзей Steam. Сделать это можно на странице по ссылке ниже." },
                                         { name: "\u200b", value: "**Добавляйся в голосовой канал:**" },
                                         { name: "<#" + party_channel + ">", value: "\u200b" }
                                     )
                                     .setTimestamp()
-                                    .setFooter({ 
+                                    .setFooter({
                                         icon_url: config.ui.icon_url,
                                         text: config.ui.title
                                     });
@@ -414,7 +412,7 @@ async execute(interaction) {
                                     .setLabel('Присоединиться к лобби')
                                     .setURL(BifrostUri)
                                     .setStyle(ButtonStyle.Link);
-    
+
                                 NotificationsChannel.send({ embeds: [invite_embed], components: [component_buttons] }).then(repliedMessage => {
                                     setTimeout(() => repliedMessage.delete(), 600000);
                                 });
@@ -429,7 +427,7 @@ async execute(interaction) {
             });
         }
 	},
-};      
+};
 
 getSteam = function (UserDiscordUid, callback) {
     let sql1 = "SELECT user_discord_uid, user_steam_uid FROM users WHERE user_discord_uid = ? LIMIT 1;";

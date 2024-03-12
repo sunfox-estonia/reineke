@@ -53,7 +53,7 @@ module.exports = {
 
                 NotificationsChannel.send({ content: String.fromCodePoint('0x1F511') + String.fromCodePoint(notification_color) + ` <@&${config.roles.community.viruviking}>, ${notification_text}` });
 
-                BotLogChannel.send({ content: `CLUB DOOR: Status has been changed by ${interaction.user.tag}` });
+                BotLogChannel.send({ content: `CLUB DOOR: Status has been changed by <@${interaction.user.id}>` });
 
             }
         }

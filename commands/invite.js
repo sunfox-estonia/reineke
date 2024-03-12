@@ -35,7 +35,7 @@ module.exports = {
 
         getInviteCreator(creator_discord_user.id, function (error, invite_creator_id) {
             if (error) {
-                const locales = {
+                let locales = {
                     "en-US": 'The invitation link cannot be created by current user.'
                 };
                 interaction.reply({ content: locales[interaction.locale] ?? error, ephemeral: true });
@@ -70,14 +70,14 @@ module.exports = {
                 */
                 addInvite(invite.code, invite_creator_id, function (error) {
                     if (error) {
-                        const locales = {
+                        let locales = {
                             "en-US": 'An error occurred while creating invitation link.'
                         };
                         interaction.reply({ content: locales[interaction.locale] ?? error, ephemeral: true });
                     } else {
                         var inviteUrl = landingUrl + 'i/' + invite.code;
                         interaction.reply({ content: '— Вот ссылка-приглашение на сервер: ' + inviteUrl, ephemeral: true });
-                        BotLogChannel.send({ content: `[INVITE] CREATE: An a new **/invite** has been created by: ${interaction.user.tag}.\n- Landing: ${landing}\n- Code: ${invite.code}`});
+                        BotLogChannel.send({ content: `[INVITE] CREATE: An a new **/invite** has been created by: <@${interaction.user.id}>. Landing: ${landing}, code: ${invite.code}`});
                         return;
                     }
                 });
