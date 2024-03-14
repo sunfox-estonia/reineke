@@ -408,7 +408,7 @@ async execute(interaction) {
                                 * Get app connected achievements from DB
                                 */
 
-                                const component_buttons = new ButtonBuilder()
+                                var component_buttons = new ButtonBuilder()
                                     .setLabel('Присоединиться к лобби')
                                     .setURL(BifrostUri)
                                     .setStyle(ButtonStyle.Link);
