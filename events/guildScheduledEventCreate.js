@@ -11,8 +11,8 @@ const database = mysql.createConnection({
     multipleStatements: true,
 });
 
-/* 
- * This scipt creates an Event-related role 
+/*
+ * This scipt creates an Event-related role
  * for each new event created on the server.
  * It adds role ID with the event ID to the Database.
  */
@@ -25,7 +25,7 @@ module.exports = {
         var discord_event_id = event.id;
         var discord_event_name = event.name;
         var discord_event_url = event.url;
-        var event_role_name = "Событие: " + discord_event_name;
+        var event_role_name = `Участники события: ${discord_event_name}`;
 
         await event.guild.roles.create({
             name: event_role_name,
