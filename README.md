@@ -206,6 +206,10 @@ project
 │   │   │   5S.png
 │   │   │   ...
 │   │
+│   ├───gifts
+│   │   │   20241.png
+│   │   │   ...
+│   │
 │   └───powerpoints
 │       │   1.png
 │       │   ...
