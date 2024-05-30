@@ -33,7 +33,7 @@ module.exports = {
          * We should delete all messages in a play2gether channel
          * and create a new embed message with the information
          * about the play2gether command
-         * Sould be runned one time per day at 11:30-13:30
+         * Should be runned one time per day at 11:30-13:30
          */
         const timeFormat    = 'hh:mm';
         var timeCurrent     = moment();

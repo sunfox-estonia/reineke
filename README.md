@@ -12,6 +12,7 @@
     "guild_id": "your Discord Server ID here",
     "log_channels": {
         "notifictions": "user notifications channel ID here",
+        "play2" : "/play2gether command notifications channel ID here",
         "log": "bot system log channel ID here"
     },
     "db_config": {
@@ -61,13 +62,19 @@
     { "name": "Battlefield 1", "value": "1238840" },
     { "name": "Dead by Daylight", "value": "381210" }
   ],
-  "services": [
-    { "name": "Service title", "value": "Service code" }
-  ]
+  "gifts": {
+      "shortlist" : [
+          { "name": "Chipped Tankard", "value": "20241" }
+      ],
+      "longlist" : {
+          "20241": {
+              "title": "Chipped Tankard",
+              "description": "A chipped tankard that has seen better days. It's still usable, but it's not the most attractive thing in the world.",
+          }
+      }
+  }
 }
 ```
-
-
 Проект структуры БД для бота в формате DBML:
 ```dbml
 Project ReinekeDb {
@@ -81,6 +88,7 @@ Table users {
   user_discord_uid varchar(256) [null]
   user_name varchar(256) [null]
   user_steam_uid varchar(256) [null]
+  user_xbox_uid varchar(256) [null]
   user_timezone varchar(256) [null, default: `Europe/Tallinn`]
   user_invite_id integer
   services_vpn_us boolean [default: false]
@@ -93,14 +101,23 @@ Table users {
 enum user_landing_list {
   common
   glitterbeard
-  minecraftrpg
+  viruviking
 }
 
-Table user_commendations {
+Table user_comedations {
   record_id integer [pk, unique, increment]
   user_discord_uid varchar(256) [not null]
-  commendation_code varchar(64) [not null]
-  user_id_created integer [ref: > users.user_id]
+  comedation_code varchar(64) [not null]
+  date_created timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table user_gifts{
+  record_id integer [pk, unique, increment]
+  user_discord_uid varchar(256) [not null]
+  gift_code varchar(64) [not null]
+  gift_title varchar(64) [not null]
+  gift_description varchar(64) [not null]
+  gift_key varchar(64) [not null]
   date_created timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
@@ -109,20 +126,6 @@ Table events_roles {
   discord_event_id varchar(256) [not null]
   discord_role_id varchar(256) [not null]
   date_created timestamp [default: `CURRENT_TIMESTAMP`]
-}
-
-Table user_levels {
-  record_id integer [pk, unique, increment]
-  user_discord_uid varchar(256) [not null]
-  level_code varchar(64) [not null]
-  date_created timestamp [default: `CURRENT_TIMESTAMP`]
-}
-
-Table user_games {
-  record_id integer [pk, unique, increment]
-  game_user_id integer [ref: > users.user_id]
-  steam_game_code varchar(64) [not null]
-  date_created timestamp [default: `CURRENT_TIMESTAMP`] 
 }
 
 Table invites {
@@ -138,21 +141,77 @@ Table invites {
 }
 
 Table dir_comedations [headercolor: #EBC743] {
-  commendation_id integer [pk, unique, increment]
-  commendation_code varchar(64) [not null]
-  commendation_title varchar(128) [not null]
-  commendation_description  varchar(256) [not null]
-  commendation_type commendation_type_list [not null, default: `general`]
-  commendation_pp integer [not null]
-  commendation_image boolean [default: false]
+  comedation_id integer [pk, unique, increment]
+  comedation_code varchar(64) [not null]
+  comedation_title varchar(128) [not null]
+  comedation_description  varchar(256) [not null]
+  comedation_type comedation_type_list [not null, default: `common`]
+  comedation_pp integer [not null]
+  comedation_image boolean [default: false]
   steam_game_code varchar(64) [null]
 }
 
-enum commendation_type_list {
-  general
-  special
-  ingame
+enum comedation_type_list {
+  common
+  rare
 }
 ```
 
 Структуру БД смотри в файле ReinekeDb.sql.
+
+### Ресурсы в домене reineke.sunfox.ee
+На сайте reineke.sunfox.ee размещаются ресурсы, используемые для корректной работы бота.
+Файловая структура для ссылок на изображения:
+
+```
+project
+│
+├───img
+│   │
+│   ├───comedations
+│   │   │   101_image.png
+│   │   │   101_profile.png
+│   │   │   102_image.png
+│   │   │   102_profile.png
+│   │   │   ...
+│   │
+│   ├───glitterbeard
+│   │   │   sloop_farm_souls.png
+│   │   │   brig_pvp_servants.png
+│   │   │   1100.png
+│   │   │   ...
+│   │
+│   ├───dice
+│   │   │   d4-1.png
+│   │   │   d6-1.png
+│   │   │   d8-1.png
+│   │   │   d10-1.png
+│   │   │   d12-1.png
+│   │   │   d20-1.png
+│   │   │   ...
+│   │
+│   ├───alerts
+│   │   │   alert_announcement.png
+│   │   │   alert_coins.png
+│   │   │   alert_note.png
+│   │   │   alert_playtogether.png
+│   │   │   alert_raid.png
+│   │   │   alert_scroll.png
+│   │   │   ...
+│   │
+│   ├───card
+│   │   │   2C.png
+│   │   │   3D.png
+│   │   │   4H.png
+│   │   │   5S.png
+│   │   │   ...
+│   │
+│   └───powerpoints
+│       │   1.png
+│       │   ...
+│       │   11.png
+│       │   ...
+│       └───60.png
+│     
+└───tmp
+```
