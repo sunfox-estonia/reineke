@@ -29,7 +29,7 @@ module.exports = {
         } else {
             var user_discord_uid = interaction.options.getMember('user');
         }
-
+        const ProfileUri = config.url.commonUrl + "profile/";
         /* Step 1. Get user Discord profile and data from database
          */
         await interaction.guild.members.fetch(user_discord_uid).then(
@@ -39,7 +39,7 @@ module.exports = {
                     interaction.reply({ content: '— Кажется, у  меня нет доступа к записям прямо сейчас. Извини!', ephemeral: true });
                 } else {
                     if (user_data.length == 0 || user_data.length > 1) {
-                    interaction.reply({ content: '— Увы, но в моих записях нет упоминаний об этом человеке!', ephemeral: true });
+                    interaction.reply({ content: "— Кажется, у Тебя еще нет профиля достижений Sunfox.ee. [Создать профиль](" + ProfileUri + ")." , ephemeral: true });
                     } else {
                         const ProfileEmbed = new EmbedBuilder()
                         .setAuthor({ name: DiscordUser.displayName, iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
@@ -130,8 +130,6 @@ module.exports = {
                             /* Step 5
                              * Create and send embed with user data
                              */
-                            let ProfileUri = config.url.commonUrl + "profile/" + user_profile.user_discord_uid;
-
                             var ProfileBtn = new ButtonBuilder()
                             .setLabel('Смотреть профиль')
                             .setURL(ProfileUri)
