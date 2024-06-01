@@ -29,6 +29,7 @@ CREATE TABLE `user_gifts` (
   `gift_title` varchar(64) NOT NULL,
   `gift_description` varchar(64) NOT NULL,
   `gift_code` varchar(64) NOT NULL,
+  `gift_key` varchar(256) NOT NULL,
   `date_created` timestamp DEFAULT (CURRENT_TIMESTAMP)
 );
 

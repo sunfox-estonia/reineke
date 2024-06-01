@@ -117,7 +117,7 @@ Table user_gifts{
   gift_code varchar(64) [not null]
   gift_title varchar(64) [not null]
   gift_description varchar(64) [not null]
-  gift_key varchar(64) [not null]
+  gift_key varchar(256) [not null]
   date_created timestamp [default: `CURRENT_TIMESTAMP`]
 }
 

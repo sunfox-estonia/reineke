@@ -55,12 +55,16 @@ module.exports = {
 
                         if (user_data.user_steam_uid != null) {
                             ProfileEmbed.addFields(
-                                { name: `Добавить в друзья`, value: `[Steam](https://steamcommunity.com/profiles/${user_data.user_steam_uid})`, inline: true },
+                                { name: `Добавить в друзья`, value: `[<:ico_steam:1246544322321715253> Steam](https://steamcommunity.com/profiles/${user_data.user_steam_uid})`, inline: true },
+                            )
+                        } else if (user_data.user_steam_uid == null && user_data.user_xbox_uid != null){
+                            ProfileEmbed.addFields(
+                                { name: `Добавить в друзья`, value: `[<:ico_xbox:1246544319947604012> XBOX](https://account.xbox.com/en-US/profile?gamertag=${user_data.user_xbox_uid})`, inline: true },
                             )
                         }
-                        if (user_data.user_xbox_uid != null) {
+                        if (user_data.user_steam_uid != null && user_data.user_xbox_uid != null) {
                             ProfileEmbed.addFields(
-                                { name: "", value: `[XBOX](https://account.xbox.com/en-US/profile?gamertag=${user_data.user_xbox_uid})`, inline: true },
+                                { name: "", value: `[<:ico_xbox:1246544319947604012> XBOX](https://account.xbox.com/en-US/profile?gamertag=${user_data.user_xbox_uid})`, inline: true },
                             )
                         }
 
