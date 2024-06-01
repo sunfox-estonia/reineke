@@ -62,53 +62,46 @@ module.exports = {
 
             await interaction.guild.members.fetch(target_user).then(
                 DiscordUser => {
-                    getComedationsProfile(DiscordUser.user.id,function(error,user_profile){
+                    checkComedation(DiscordUser.user.id,target_achievement,function(error,achievement_data){
                         if (error) {
                             interaction.reply({ content: error, ephemeral: true });
-                            BotLogChannel.send({ content: `ERROR: Can't get User comendations profile for <@` + DiscordUser.user.id + `>` });
                         } else {
-                            checkComedation(user_profile,target_achievement,function(error,achievement_data){
+                            addComedation(DiscordUser.user.id, achievement_data,function(error){
                                 if (error) {
                                     interaction.reply({ content: error, ephemeral: true });
                                 } else {
-                                    addComedation(user_profile, achievement_data,function(error){
+                                    let embed_username = DiscordUser.nickname ?? DiscordUser.user.username;
+                                    let embed_image = ( achievement_data.comedation_image === true ) ? config.url.resourcesUrl + "img/comedations/" + target_comedation_code + "png" : config.url.resourcesUrl + "img/comendations/default.png" ;
+                                    let ProfileUri = config.url.commonUrl + "profile/";
+
+                                    var achievement_embed = new EmbedBuilder()
+                                        .setColor(config.colors.primaryDark)
+                                        .setTitle(embed_username  + " получил новое достижение!")
+                                        .setThumbnail(embed_image)
+                                        .addFields(
+                                            { name: ":white_check_mark: - " + achievement_data.comedation_title + " (" + achievement_data.comedation_pp + " очков)",
+                                            value: achievement_data.comedation_description },
+                                            { name: "\u200b", value:"\u200b" }
+                                        )
+                                        .setTimestamp()
+                                        .setFooter({
+                                            icon_url: config.ui.icon_url,
+                                            text: config.ui.title
+                                    });
+
+                                    var achievement_button = new ButtonBuilder()
+                                    .setLabel('Посмотреть достижения')
+                                    .setURL(ProfileUri)
+                                    .setStyle(ButtonStyle.Link);
+
+                                    NotificationsChannel.send({content:`${embed_username}, смотри, что для Тебя есть:`, embeds: [achievement_embed], components: [achievement_button]});
+
+                                    countComedationsPowerPoints(DiscordUser.user.id,function(error,total_pp){
                                         if (error) {
-                                            interaction.reply({ content: error, ephemeral: true });
+                                            callback("There was an error counting user powerpoints.");
+                                            return;
                                         } else {
-                                            let embed_username = DiscordUser.nickname ?? DiscordUser.user.username;
-                                            let embed_image = ( achievement_data.comedation_image === true ) ? config.url.resourcesUrl + "img/comedations/" + target_comedation_code + "png" : config.url.resourcesUrl + "img/comendations/default.png" ;
-                                            let ProfileUri = config.url.commonUrl + "profile/" + user_profile.user_discord_uid;
-
-                                            var achievement_embed = new EmbedBuilder()
-                                                .setColor(config.colors.primaryDark)
-                                                .setTitle(embed_username  + " получил новое достижение!")
-                                                .setThumbnail(embed_image)
-                                                .addFields(
-                                                    { name: ":white_check_mark: - " + achievement_data.comedation_title + " (" + achievement_data.comedation_pp + " очков)",
-                                                    value: achievement_data.comedation_description },
-                                                    { name: "\u200b", value:"\u200b" }
-                                                )
-                                                .setTimestamp()
-                                                .setFooter({
-                                                    icon_url: config.ui.icon_url,
-                                                    text: config.ui.title
-                                            });
-
-                                            var achievement_button = new ButtonBuilder()
-                                            .setLabel('Посмотреть достижения')
-                                            .setURL(ProfileUri)
-                                            .setStyle(ButtonStyle.Link);
-
-                                            NotificationsChannel.send({content:`${DiscordUser.user}, смотри, что для Тебя есть:`, embeds: [achievement_embed], components: [achievement_button]});
-
-                                            countComedationsPowerPoints(user_profile.user_discord_uid,function(error,total_pp){
-                                                if (error) {
-                                                    callback("There was an error counting user powerpoints.");
-                                                    return;
-                                                } else {
-                                                    BotLogChannel.send({ content: `ACHIEVEMENT ADDED: to user <@` + user_profile.user_discord_uid + `> - (` + commendation_data.comedation_code + `) ` + commendation_data.comedation_title + `\nUser user PowerPoints sum: ` + total_pp `\n`+ `Created by <@` + interaction.user.id + `>` });
-                                                }
-                                            });
+                                            BotLogChannel.send({ content: `ACHIEVEMENT ADDED: to user <@` + DiscordUser.user.id + `> - (` + achievement_data.comedation_code + `) ` + achievement_data.comedation_title + `\nUser user PowerPoints sum: ` + total_pp `\n`+ `Created by <@` + interaction.user.id + `>` });
                                         }
                                     });
                                 }
@@ -169,23 +162,8 @@ module.exports = {
         }
     }
 };
-getComedationsProfile = function(discord_uid, callback) {
-	let sql1 = "SELECT users.user_id, users.user_discord_uid FROM users WHERE users.user_discord_uid = ? LIMIT 1;";
-	database.query(sql1, [discord_uid], (error1, results, fields) => {
-		if (error1) {
-			callback("Database error.",null);
-			return;
-		}
-		if (results.length == 0 || results.length > 1){
-			callback("User profile doesn't exists.",null);
-			return;
-		}
-		callback(null,results[0]);
-	});
-// getProfile closed
-}
 
-checkComedation = function(user_data, comedation_code, callback) {
+checkComedation = function(user_discord_uid, comedation_code, callback) {
     // Check thе achievement exists and is available for user level
     let sql2 = "SELECT * FROM dir_comedations WHERE commendation_code = ?;";
     database.query(sql2, [comedation_code], (error2, comedation_fulldata, fields) => {
@@ -199,7 +177,7 @@ checkComedation = function(user_data, comedation_code, callback) {
         }
         // Check if achivement is already added for selected user
         let sql3 = "SELECT count(*) AS rowscount FROM user_comedations WHERE user_discord_uid = ? AND comedation_code = ?;";
-        database.query(sql3, [user_data.user_discord_uid,comedation_code], (error3, check_added, fields) => {
+        database.query(sql3, [user_discord_uid,comedation_code], (error3, check_added, fields) => {
             if (error3) {
                 callback("Database error.",null);
                 return;
@@ -214,10 +192,10 @@ checkComedation = function(user_data, comedation_code, callback) {
 // checkAchievement ended
 }
 
-addComedation = function(user_data, commendation_data, callback) {
+addComedation = function(user_discord_uid, comedation_data, callback) {
 	// Add achivement for user
 	let sql4 = "INSERT INTO user_comedations (user_discord_uid, comedation_code) VALUES (?,?);";
-    database.query(sql4, [user_data.user_discord_uid,comedation_data.comedation_code], (error4, pingback) => {
+    database.query(sql4, [user_discord_uid,comedation_data.comedation_code], (error4, pingback) => {
         if (error4) {
             callback("There was an error adding comendation to user profile.");
             return;
