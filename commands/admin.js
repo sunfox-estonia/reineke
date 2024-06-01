@@ -71,7 +71,7 @@ module.exports = {
                                     interaction.reply({ content: error, ephemeral: true });
                                 } else {
                                     let embed_username = DiscordUser.nickname ?? DiscordUser.user.username;
-                                    let embed_image = ( achievement_data.comedation_image === true ) ? config.url.resourcesUrl + "img/comedations/" + target_comedation_code + "png" : config.url.resourcesUrl + "img/comendations/default.png" ;
+                                    let embed_image = ( achievement_data.comedation_type  === "rare" ) ? config.url.resourcesUrl + "img/comedations/" + target_comedation_code + "png" : config.url.resourcesUrl + "img/comendations/default.png" ;
                                     let ProfileUri = config.url.commonUrl + "profile/";
 
                                     var achievement_embed = new EmbedBuilder()

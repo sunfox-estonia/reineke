@@ -58,7 +58,6 @@ CREATE TABLE `dir_comedations` (
   `comedation_description` varchar(256) NOT NULL,
   `comedation_type` ENUM ('common', 'rare') NOT NULL DEFAULT ('common'),
   `comedation_pp` integer NOT NULL,
-  `comedation_image` boolean DEFAULT false,
   `steam_game_code` varchar(64)
 );
 

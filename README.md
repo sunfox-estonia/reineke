@@ -147,7 +147,6 @@ Table dir_comedations [headercolor: #EBC743] {
   comedation_description  varchar(256) [not null]
   comedation_type comedation_type_list [not null, default: `common`]
   comedation_pp integer [not null]
-  comedation_image boolean [default: false]
   steam_game_code varchar(64) [null]
 }
 
