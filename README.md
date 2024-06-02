@@ -48,6 +48,12 @@
         "steam": {
             "token": "Your Steam API token here"
         }
+    },
+    "buffer": {
+        "images":  {
+            "path": "Temporary directory to save images path",
+            "url": "Temporary directory URL"
+        }
     }
 }
 ```

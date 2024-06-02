@@ -1,4 +1,4 @@
-const { Events } = require('discord.js');
+const { Events, EmbedBuilder } = require('discord.js');
 const config = require('../config.json');
 const mysql = require('mysql');
 const moment = require('moment');
@@ -27,7 +27,7 @@ module.exports = {
             channel.send("Reineke management bot is started!");
         });
 
-        const BotLogChannel = client.guild.channels.cache.get(config.log_channels.log);
+        const BotLogChannel = client.channels.cache.get(config.log_channels.log);
 
         /* Play2gether channel praparing block
          * We should delete all messages in a play2gether channel
@@ -41,7 +41,7 @@ module.exports = {
         var timeLimitEnd    = moment('13:30', timeFormat);
 
         if (timeCurrent.isBetween(timeLimitStart, timeLimitEnd)) {
-            const Play2Channel  = client.guild.channels.cache.get(config.log_channels.play2);
+            const Play2Channel  = client.channels.cache.get(config.log_channels.play2);
 
             // Step 1. Clear the Play2gether channel
             if (!Play2Channel) {
@@ -57,7 +57,7 @@ module.exports = {
                 .setColor(config.colors.primaryDark)
                 .setTitle( "— Будем играть вместе!" )
                 .setDescription("Приглашай участников сообщества в кооперативные игры с помощью команды `/play2gether`. Доступно два режима использования команды: для экипажей Sea of Thieves, и для других игр.")
-                .setImage(config.ui.resourcesUrl + "/help/play2gether.gif")
+                .setImage(config.url.resourcesUrl + "/help/play2gether.gif")
             .addFields(
                 { name: "/play2gether sot", value: "Выбери цель путешествия, тип судна и голосовой чат для общения с экипажем. После отправки команды, пираты Гильдии получат уведомление, и по возможности присоединятся к Тебе." },
                 { name: "/play2gether game", value: "Выбери игру из списка и голосовой чат для общения с командой. Участники сервера смогут подключиться к игровому лобби, воспользовавшись сгенерированной ссылкой-приглашением." },

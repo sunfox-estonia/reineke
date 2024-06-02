@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, ChannelType, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const config = require('../config.json');
 const lists = require('../config.lists.json');
 const mysql = require('mysql');
@@ -40,8 +40,8 @@ module.exports = {
                     .setDescriptionLocalizations({
                         "en-US": 'Game name',
                     })
-                    .setRequired(false)
-                    .addChoices(lists.games))
+                    .setRequired(true)
+                    .addChoices(...lists.games))
             .addChannelOption(option =>
                 option.setName('channel')
                     .setDescription('Канал')
@@ -222,7 +222,7 @@ async execute(interaction) {
 							.setColor(config.colors.primaryBright)
 							.setAuthor({ name: DiscordUser.displayName + " собирает рейд.", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
 							.setDescription("Начало сессии - <t:" + time_to_go + ":R>")
-							.setThumbnail(config.url.resourcesUrl + "img/gb/" + img_ship_mission + ".png")
+							.setThumbnail(config.url.resourcesUrl + "img/glitterbeard/" + img_ship_mission + ".png")
 							.addFields(
 								{ name: "Присоединяйся к рейду!", value: "Для участия в рейде Тебе потребуется приложение **FleetCreator**, а также установленный и настроенный **VPN**. Участникам сообщества Sunfox.ee бесплатно предоставляется безопасный VPN-сервис: обратись к Хранителям для получения более подробной информации." },
 								{ name: "Подготовка к рейду:", value: "[Установить и настроить FleetCreator](https://wiki.sunfox.ee/glitterbeard:fleetcreator)\n[Установить и настроить VPN](https://wiki.sunfox.ee/glitterbeard:vpn)" },
@@ -247,7 +247,7 @@ async execute(interaction) {
 							.setColor(config.colors.primaryBright)
 							.setAuthor({ name: DiscordUser.displayName + " собирает команду.", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
 							.setDescription("Начало сессии - <t:" + time_to_go + ":R>")
-							.setThumbnail(config.url.resourcesUrl + "img/gb/" + img_ship_mission + ".png")
+							.setThumbnail(config.url.resourcesUrl + "img/glitterbeard/" + img_ship_mission + ".png")
 							.addFields(
 								{ name: "Корабль:", value: text_ship_type },
 								{ name: "Миссия:", value: text_mission_description },
@@ -262,7 +262,7 @@ async execute(interaction) {
 						/*
 						* Get Steam profile to show achievements in PVP
 						*/
-						getSteam(interaction.member.user.id, function (error, steam_data) {
+						getSteam(interaction.member.user.id, function (error, dataset1) {
 							if (error) {
 								// If there is no Steam profile available
 								NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed] }).then(repliedMessage => {
@@ -273,6 +273,9 @@ async execute(interaction) {
 								BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite`});
 
 							} else {
+                                var steam_data_prep = JSON.parse(JSON.stringify(dataset1));
+                                var steam_data = steam_data_prep[0];
+
 								// If profile is available
 								// Here you can see full achievements list:
 								// http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v0002/?key=APIKEY&appid=1172620&l=english&format=json
@@ -281,6 +284,8 @@ async execute(interaction) {
 									if (UserAchievements.steamID !== undefined) {
 										CommendationsList = ['220', '219', '221', '222'];
 										var Badges = "";
+
+                                        console.log(UserAchievements.achievements);
 
 										let i = 0;
 										while (i < CommendationsList.length) {
@@ -297,7 +302,7 @@ async execute(interaction) {
 										var BadgesImage = "pvp_profile_" + Badges + ".png";
 
 										if (ship_task == "pvp_servants" || ship_task == "pvp_guardians") {
-											invite_embed.setImage(config.url.resourcesUrl + 'img/gb/' + BadgesImage);
+											invite_embed.setImage(config.url.resourcesUrl + 'img/glitterbeard/' + BadgesImage);
 											invite_embed.addFields(
 												{ name: '\u200b', value: '**Достижения ' + DiscordUser.displayName + ' в режиме PvP:**' }
 											)
@@ -312,7 +317,7 @@ async execute(interaction) {
 
 								})
 								.catch(error => {
-                                    NotificationsChannel.send({ content: `<@&1104521026584457216> и <@&1039215669943742475>, присоединяйтесь к путешествию:`, embeds: [invite_embed] }).then(repliedMessage => {
+                                    NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed] }).then(repliedMessage => {
                                         setTimeout(() => repliedMessage.delete(), 600000);
                                     });
                                     interaction.reply({ content: '— Приглашение создано!', ephemeral: true });
@@ -340,6 +345,8 @@ async execute(interaction) {
                 const time_to_go = fetchTimestamp(party_time);
                 const steam_app_id = interaction.options.getString('game');
 
+                console.log(steam_app_id);
+
                 getSteam(interaction.member.user.id, function (error, steam_data) {
                     if (error) {
                         // If there is no Steam profile available
@@ -349,7 +356,7 @@ async execute(interaction) {
                                 .setColor(config.colors.primaryBright)
                                 .setAuthor({ name: DiscordUser.displayName + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
                                 .setDescription("Начало сессии - <t:" + time_to_go + ":R>")
-                                .setThumbnail(config.url.resourcesUrl + "img/bot/alert_playtogether.png")
+                                .setThumbnail(config.url.resourcesUrl + "img/alerts/alert_playtogether.png")
                                 .setImage(SteamApp.header_image)
                                 .addFields(
                                     { name: "Присоединяйся к игре!", value: "Чтобы играть вместе, Тебе необходимо установить **"+SteamApp.name+"** на свой компьютер, а также добавить **" + DiscordUser.displayName + "** в список друзей Steam." },
@@ -377,7 +384,7 @@ async execute(interaction) {
                              * Create an invite to play
                              */
 
-                            // In case if user has been runnded something aready
+                            // In case if user has been runned something aready
                             if(SteamUser.gameID === undefined){
                             } else if (SteamUser.gameID !== undefined){
                             }
@@ -391,7 +398,7 @@ async execute(interaction) {
                                     .setColor(config.colors.primaryBright)
                                     .setAuthor({ name: DiscordUser.displayName + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
                                     .setDescription("Начало сессии - <t:" + time_to_go + ":R>")
-                                    .setThumbnail(config.url.resourcesUrl + "img/bot/alert_playtogether.png")
+                                    .setThumbnail(config.url.resourcesUrl + "img/alerts/alert_playtogether.png")
                                     .setImage(SteamApp.header_image)
                                     .addFields(
                                         { name: "Присоединяйся к игре!", value: "Чтобы играть вместе, Тебе необходимо установить **"+SteamApp.name+"** на свой компьютер, а также добавить **" + DiscordUser.displayName + "** в список друзей Steam. Сделать это можно на странице по ссылке ниже." },
@@ -408,12 +415,15 @@ async execute(interaction) {
                                 * Get app connected achievements from DB
                                 */
 
-                                var component_buttons = new ButtonBuilder()
+                                var JoinLobbyBtn = new ButtonBuilder()
                                     .setLabel('Присоединиться к лобби')
                                     .setURL(BifrostUri)
                                     .setStyle(ButtonStyle.Link);
 
-                                NotificationsChannel.send({ embeds: [invite_embed], components: [component_buttons] }).then(repliedMessage => {
+                                var ButtonsRow1 = new ActionRowBuilder()
+                                .addComponents(JoinLobbyBtn);
+
+                                NotificationsChannel.send({ embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
                                     setTimeout(() => repliedMessage.delete(), 600000);
                                 });
                                 interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
@@ -440,7 +450,7 @@ getSteam = function (UserDiscordUid, callback) {
             callback("Ошибка получения профиля пользователя.", null);
             return;
         }
-        callback(null, result_userdata[0]);
+        callback(null, result_userdata);
     });
 }
 

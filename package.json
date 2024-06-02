@@ -17,9 +17,10 @@
         "fs": "*",
         "events": "*",
         "fecha": "*",
-        "steamapi":"*",
+        "steamapi":"2.4.2",
         "moment":"*",
-        "merge-images":"*"
+        "moment-timezone":"*",
+        "canvas":"*"
     },
     "repository": {
         "type": "git",

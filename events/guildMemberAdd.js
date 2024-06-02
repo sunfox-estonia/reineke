@@ -13,7 +13,6 @@ const database = mysql.createConnection({
 module.exports = {
     name: Events.GuildMemberAdd,
     async execute(member) {
-        const UserNotifyChannel = member.client.channels.cache.get(config.log_channels.notifictions);
         const BotLogChannel = member.client.channels.cache.get(config.log_channels.log);
 
         /* Step 1.
@@ -21,7 +20,7 @@ module.exports = {
         *  users table.
         */
         let sql1 = "SELECT * FROM users WHERE user_discord_uid = ? LIMIT 1;";
-        database.query(sql1, [member.user.id], (error1, user_data) => {
+        database.query(sql1, [member.user.id], (error1, dataset1) => {
             if (error1) {
                 BotLogChannel.send({ content: `[INVITE] JOIN ERROR: Can't get user ${member.user} data. Database error.` });
                 return;
@@ -30,6 +29,9 @@ module.exports = {
                 BotLogChannel.send({ content: `[INVITE] JOIN ERROR: Can't get user ${member.user} data. User not found or there are dublicated records in DB` });
                 return;
             } else {
+                var user_data_prep = JSON.parse(JSON.stringify(dataset1));
+                var user_data = user_data_prep[0];
+
                 /* Step 2
                 *  Assign default role to user
                 */

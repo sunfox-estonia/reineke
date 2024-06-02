@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, AttachmentBuilder } = require('discord.js');
 const config = require('../config.json');
 const mysql = require('mysql');
 const database = mysql.createConnection({
@@ -9,8 +9,7 @@ const database = mysql.createConnection({
     debug: false,
     multipleStatements: true,
 });
-const moment = require('moment');
-const mergeImages = require('merge-images');
+const moment = require('moment-timezone');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,9 +20,12 @@ module.exports = {
         })
 		.addUserOption(option =>
 			option.setName('user')
-				.setDescription('Имя пользователя | User name')),
+				.setDescription('Имя пользователя | User name')
+                .setRequired(false)),
 
     async execute(interaction) {
+        const BotLogChannel = interaction.client.channels.cache.get(config.log_channels.log);
+
         if (interaction.options.getMember('user') == null) {
             var user_discord_uid = interaction.member.user.id;
         } else {
@@ -34,18 +36,26 @@ module.exports = {
          */
         await interaction.guild.members.fetch(user_discord_uid).then(
         DiscordUser => {
-            getUserProfile(DiscordUser.user.id, function (error, user_data) {
+            getUserProfile(DiscordUser.user.id, function (error, dataset1) {
                 if (error) {
                     interaction.reply({ content: '— Кажется, у  меня нет доступа к записям прямо сейчас. Извини!', ephemeral: true });
                 } else {
-                    if (user_data.length == 0 || user_data.length > 1) {
-                    interaction.reply({ content: "— Кажется, у Тебя еще нет профиля достижений Sunfox.ee. [Создать профиль](" + ProfileUri + ")." , ephemeral: true });
+                    if (dataset1.length == 0 || dataset1.length > 1) {
+                        if (interaction.options.getMember('user') == null) {
+                            interaction.reply({ content: "— Кажется, у Тебя еще нет профиля достижений Sunfox.ee. [Создать профиль](" + ProfileUri + ")." , ephemeral: true });
+                        } else {
+                            interaction.reply({ content: "— Кажется, у этого пользователя еще нет профиля достижений Sunfox.ee. Обязательно попроси нашего друга создать себе профиль!" , ephemeral: true });
+                        }
                     } else {
+                        var user_data_prep = JSON.parse(JSON.stringify(dataset1));
+                        var user_data = user_data_prep[0];
+                        var user_timezone = user_data.user_timezone == null ? "Europe/Tallinn" : user_data.user_timezone;
+
                         const ProfileEmbed = new EmbedBuilder()
                         .setAuthor({ name: DiscordUser.displayName, iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
                         .setColor(config.colors.primaryDark)
                         .addFields(
-                            { name: "Время:", value: moment().tz(user_data.user_timezone).format('HH:mm') }
+                            { name: "Время:", value: '`' + moment().tz(user_timezone).format('HH:mm') + '`'}
                         )
                         .setTimestamp()
                         .setFooter({
@@ -53,18 +63,22 @@ module.exports = {
                             text: config.ui.title
                         });
 
-                        if (user_data.user_steam_uid != null) {
+
+
+                        if (user_data.user_steam_uid != '' && user_data.user_xbox_uid != '') {
                             ProfileEmbed.addFields(
-                                { name: `Добавить в друзья`, value: `[<:ico_steam:1246544322321715253> Steam](https://steamcommunity.com/profiles/${user_data.user_steam_uid})`, inline: true },
+                                { name: `Добавить в друзья:`, value: `[<:ico_steam:1246544322321715253> Steam](https://steamcommunity.com/profiles/${user_data.user_steam_uid})`, inline: true },
                             )
-                        } else if (user_data.user_steam_uid == null && user_data.user_xbox_uid != null){
                             ProfileEmbed.addFields(
-                                { name: `Добавить в друзья`, value: `[<:ico_xbox:1246544319947604012> XBOX](https://account.xbox.com/en-US/profile?gamertag=${user_data.user_xbox_uid})`, inline: true },
+                                { name: "\u200b", value: `[<:ico_xbox:1246544319947604012> XBOX](https://account.xbox.com/en-US/profile?gamertag=${user_data.user_xbox_uid})`, inline: true },
                             )
-                        }
-                        if (user_data.user_steam_uid != null && user_data.user_xbox_uid != null) {
+                        } else if (user_data.user_steam_uid == '' && user_data.user_xbox_uid != ''){
                             ProfileEmbed.addFields(
-                                { name: "", value: `[<:ico_xbox:1246544319947604012> XBOX](https://account.xbox.com/en-US/profile?gamertag=${user_data.user_xbox_uid})`, inline: true },
+                                { name: `Добавить в друзья:`, value: `[<:ico_xbox:1246544319947604012> XBOX](https://account.xbox.com/en-US/profile?gamertag=${user_data.user_xbox_uid})`, inline: true },
+                            )
+                        } else if (user_data.user_steam_uid != '' && user_data.user_xbox_uid == '') {
+                            ProfileEmbed.addFields(
+                                { name: `Добавить в друзья:`, value: `[<:ico_steam:1246544322321715253> Steam](https://steamcommunity.com/profiles/${user_data.user_steam_uid})`, inline: true },
                             )
                         }
 
@@ -73,6 +87,7 @@ module.exports = {
                          */
                         countUserPowerPoints(DiscordUser.user.id, function (error, user_pp) {
                             if (error) {
+                                BotLogChannel.send({ content: `[SYSTEM] DB ERROR: ` + error });
                                 ProfileEmbed.setThumbnail(config.url.resourcesUrl + `img/powerpoints/0.png`);
                             } else {
                                 ProfileEmbed.setThumbnail(config.url.resourcesUrl + `img/powerpoints/`+ user_pp + `.png`);
@@ -81,65 +96,39 @@ module.exports = {
                             /* Step 3
                             * Get users rare comedations and create image with the list
                             */
-                            getUserRareComedations(DiscordUser.user.id, function (error, user_rare_comedations) {
+                            getUserRareComedations(DiscordUser.user.id, function (error, dataset2) {
                                 if (error) {
 
-                                } else if (user_rare_comedations.length > 0) {
-                                    /* Step 4
-                                    * Get numbers stored in rare_comedations array and generate new image
-                                    * using merge-images library by combining all comedations-related images
-                                    * into one.
-                                    */
+                                } else if (dataset2.length > 0) {
+                                    var profile_comedations_url = config.buffer.images.url + 'p_c_' + DiscordUser.user.id + '.png?' + moment().unix();
+                                    console.log(profile_comedations_url);
+                                    ProfileEmbed.setImage(profile_comedations_url);
+                                    ProfileEmbed.addFields(
+                                        { name: '\u200b', value: '**Лучшие достижения ' + DiscordUser.displayName + ':**' }
+                                    );
 
-                                    // Set coordinates
-                                    coms_coord = [
-                                        { x: 0, y: 0 },
-                                        { x: 405, y: 0 },
-                                        { x: 0, y: 305 },
-                                        { x: 405, y: 305 }
-                                    ]
-                                    // Set size of final image
-                                    if (user_rare_comedations.length < 3) {
-                                        coms_size.width = 800;
-                                        coms_size.height = 295;
-                                    } else {
-                                        coms_size.width = 800;
-                                        coms_size.height = 600;
-                                    }
+                                    var ProfileLinkBtn = new ButtonBuilder()
+                                    .setLabel('Смотреть профиль')
+                                    .setURL(ProfileUri)
+                                    .setStyle(ButtonStyle.Link);
 
-                                    var img1 = user_rare_comedations[0].comedation_code + "_profile.png";
-                                    var img2 = user_rare_comedations.length > 1 ? user_rare_comedations[1].comedation_code + "_profile.png" : "placeholder.png";
-                                    var img3 = user_rare_comedations.length > 2 ? user_rare_comedations[2].comedation_code + "_profile.png" : "placeholder.png";
-                                    var img4 = user_rare_comedations.length > 3 ? user_rare_comedations[3].comedation_code + "_profile.png" : "placeholder.png";
-                                    mergeImages([
-                                        { src: img1, x: coms_coord[0].x , y: coms_coord[0].y },
-                                        { src: img2, x: coms_coord[1].x, y: coms_coord[1].y },
-                                        { src: img3, x: coms_coord[2].x, y: coms_coord[2].y },
-                                        { src: img4, x: coms_coord[3].x, y: coms_coord[3].y },
-                                    ],
-                                    {
-                                        width: coms_size.width,
-                                        height: coms_size.height
-                                    }).then(b64 => {
-                                        ProfileEmbed.setImage(b64);
-                                        ProfileEmbed.addFields(
-                                            { name: '\u200b', value: '**Лучшие достижения ' + DiscordUser.displayName + ':**' }
-                                        )
-                                    });
+                                    var ButtonsRow1 = new ActionRowBuilder()
+                                    .addComponents(ProfileLinkBtn);
+
+                                    interaction.reply({ embeds: [ProfileEmbed], components: [ButtonsRow1]});
+
                                 } else {
+                                    var ProfileLinkBtn = new ButtonBuilder()
+                                    .setLabel('Смотреть профиль')
+                                    .setURL(ProfileUri)
+                                    .setStyle(ButtonStyle.Link);
 
+                                    var ButtonsRow1 = new ActionRowBuilder()
+                                    .addComponents(ProfileLinkBtn);
+
+                                    interaction.reply({ embeds: [ProfileEmbed], components: [ButtonsRow1]});
                                 }
                             });
-
-                            /* Step 5
-                             * Create and send embed with user data
-                             */
-                            var ProfileBtn = new ButtonBuilder()
-                            .setLabel('Смотреть профиль')
-                            .setURL(ProfileUri)
-                            .setStyle(ButtonStyle.Link);
-
-                            interaction.reply({ embeds: [ProfileEmbed], components: [ProfileBtn]});
                         });
                     }
                 }
@@ -149,7 +138,7 @@ module.exports = {
 };
 
 getUserProfile = function (UserDiscordUid, callback) {
-    let sql1 = `SELECT * FROM users WHERE user_discord_uid = ? AND user_date_deleted IS NULL`;
+    let sql1 = `SELECT user_landing, user_discord_uid, user_name, ifnull(user_steam_uid,'') as user_steam_uid, ifnull(user_xbox_uid,'') as user_xbox_uid, user_timezone FROM users WHERE user_discord_uid = ? AND user_date_deleted IS NULL`;
     database.query(sql1, [UserDiscordUid], function (error, result) {
         if (error) {
             callback("Database error.",null);
@@ -168,8 +157,7 @@ countUserPowerPoints = function (UserDiscordUid, callback) {
                 WHERE user_comedations.user_discord_uid = ?`;
     database.query(sql2, [UserDiscordUid], function (error, result) {
         if (error) {
-            callback("Database error.", null);
-            BotLogChannel.send({ content: `[SYSTEM] DB ERROR: profile/countUserPowerPoints function error.`});
+            callback("[SYSTEM] DB ERROR: profile/countUserPowerPoints function error.", null);
         } else {
             callback(null, result[0].total_pp);
         }
@@ -180,11 +168,10 @@ getUserRareComedations = function (UserDiscordUid, callback) {
     let sql3 = `SELECT dir_comedations.comedation_code
                 FROM user_comedations
                 JOIN dir_comedations ON user_comedations.comedation_code = dir_comedations.comedation_code
-                WHERE user_comedations.user_discord_uid = ? AND dir_comedations.comedation_type = 'rare' ? ORDER BY user_comedations.date_created DESC LIMIT 4`;
+                WHERE user_comedations.user_discord_uid = ? AND dir_comedations.comedation_type = 'rare' ORDER BY user_comedations.date_created DESC LIMIT 4`;
     database.query(sql3, [UserDiscordUid], function (error, result) {
         if (error) {
-            callback("Database error.", null);
-            BotLogChannel.send({ content: `[SYSTEM] DB ERROR: profile/getUserRareComedations function error.`});
+            callback("profile/getUserRareComedations function error.", null);
         } else {
             callback(null, result);
         }

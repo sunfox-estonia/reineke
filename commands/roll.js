@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Roll20 = require('d20');
+const config = require('../config.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -27,7 +28,6 @@ module.exports = {
 		let p = data_dice.match(/(\d{0,1})[d](\d{1,2})/g);
 		result = Roll20.verboseRoll(p[0]);
 		var img =  data_dice + '-' + result + '.png';
-		await interaction.reply({files: [config.url.resourcesUrl + "img/dice/"+ img], ephemeral: data_hide  });
-
+		interaction.reply({files: [config.url.resourcesUrl + "img/dice/"+ img], ephemeral: data_hide  });
 	},
 };
