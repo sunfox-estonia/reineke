@@ -24,7 +24,7 @@ module.exports = {
             if (error1) {
                 BotLogChannel.send({ content: `[INVITE] JOIN ERROR: Can't get user ${member.user} data. Database error.` });
                 return;
-            } else if (result1.length != 0) {
+            } else if (dataset1.length != 1) {
                 // User is not registered in the database
                 BotLogChannel.send({ content: `[INVITE] JOIN ERROR: Can't get user ${member.user} data. User not found or there are dublicated records in DB` });
                 return;
