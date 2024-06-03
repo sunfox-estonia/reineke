@@ -103,6 +103,5 @@ module.exports = {
         } else {
             BotLogChannel.send({ content: `[AUTOMATION] Play2gether & Badges Requests channels has not been cleared. Current time not within limit.` });
         }
-
     },
 };
