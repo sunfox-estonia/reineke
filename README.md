@@ -54,6 +54,9 @@
             "path": "Temporary directory to save images path",
             "url": "Temporary directory URL"
         }
+    },
+    "status": {
+        "text": "Изучает /help"
     }
 }
 ```
