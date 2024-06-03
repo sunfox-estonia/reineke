@@ -1,4 +1,4 @@
-const { Events, EmbedBuilder, ActivityType } = require('discord.js');
+const { Events, EmbedBuilder, PresenceUpdateStatus  } = require('discord.js');
 const config = require('../config.json');
 const mysql = require('mysql');
 const moment = require('moment');
@@ -31,13 +31,9 @@ module.exports = {
 
         // Set the bot status
         client.user.setPresence({
-            activities: [{
-                name: config.status.text,
-                type: ActivityType.Watching,
-            }],
-            status: 'online'
+            activities: [{ name: config.status.text }],
+            status: PresenceUpdateStatus.Online
         });
-
 
         /* Play2gether channel praparing block
          * We should delete all messages in a play2gether channel
