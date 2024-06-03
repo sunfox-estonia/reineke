@@ -89,7 +89,7 @@ module.exports = {
                                         )
                                         .setTimestamp()
                                         .setFooter({
-                                            icon_url: config.ui.icon_url,
+                                            iconURL: config.ui.icon_url,
                                             text: config.ui.title
                                     });
 
@@ -199,7 +199,7 @@ module.exports = {
                                     .setThumbnail(config.url.resourcesUrl + "img/alerts/alert_gift.png")
                                     .setTimestamp()
                                     .setFooter({
-                                        icon_url: config.ui.icon_url,
+                                        iconURL: config.ui.icon_url,
                                         text: config.ui.title
                                 });
 

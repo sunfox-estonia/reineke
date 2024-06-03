@@ -59,7 +59,7 @@ module.exports = {
                         )
                         .setTimestamp()
                         .setFooter({
-                            icon_url: config.ui.icon_url,
+                            iconURL: config.ui.icon_url,
                             text: config.ui.title
                         });
 

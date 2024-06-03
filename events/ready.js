@@ -46,7 +46,7 @@ module.exports = {
         const timeFormat    = 'hh:mm';
         var timeCurrent     = moment();
         var timeLimitStart  = moment('11:30', timeFormat);
-        var timeLimitEnd    = moment('12:30', timeFormat);
+        var timeLimitEnd    = moment('19:30', timeFormat);
 
         if (timeCurrent.isBetween(timeLimitStart, timeLimitEnd)) {
             const Play2Channel  = client.channels.cache.get(config.log_channels.play2);
@@ -81,20 +81,20 @@ module.exports = {
                 { name: "\u200b", value: "Используй команду `/play2gether` как показано ниже, либо воспользуйся кнопками для быстрого создания лобби по шаблону." },
             )
             .setFooter({
-                icon_url: config.ui.icon_url,
+                iconURL: config.ui.icon_url,
                 text: config.ui.title
             });
 
             var BadgesIntroEmbed = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)
                 .setTitle( "— Покажи-ка, что интересного у тебя есть?" )
-                .setDescription("Чтобы получить достижения сообщества, в этом канале нужно предоставить доказательства, подтверждающие выполнение действий, необходимых для получения ачивки. Просмотреть весь список доступных достижений можно на сайте sunfox.ee/profile](https://sunfox.ee/profile).")
+                .setDescription("Чтобы получить достижения сообщества, в этом канале нужно предоставить доказательства, подтверждающие выполнение действий, необходимых для получения ачивки. Просмотреть весь список доступных достижений можно на сайте [sunfox.ee/profile](https://sunfox.ee/profile).")
             .addFields(
                 { name: "Редкие достижения", value: "Редкие достижения демонстрируются в профиле пользователя по команде `/profile` — на зависть остальным! Достижения, выполненные в кооперативных играх, показаны в приглашении, созданном с помощью команды `/play2gether`. Редкие достижения могут быть выданы задним числом." },
                 { name: "\u200b", value: "В этом чате включен медленный режим. Постарайся отправить доказательства одним сообщением. Не забудь указать название желаемой ачивки!" },
             )
             .setFooter({
-                icon_url: config.ui.icon_url,
+                iconURL: config.ui.icon_url,
                 text: config.ui.title
             });
 

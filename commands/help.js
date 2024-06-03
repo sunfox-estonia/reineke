@@ -43,7 +43,7 @@ module.exports = {
                 { name: "\u200b", value: "Используй команду в любом доступном канале `/play2gether` как показано ниже." },
             )
             .setFooter({
-                icon_url: config.ui.icon_url,
+                iconURL: config.ui.icon_url,
                 text: config.ui.title
             });
 
@@ -59,7 +59,7 @@ module.exports = {
                 { name: "\u200b", value: "Используй команду в любом доступном канале `/club` как показано ниже." },
             )
             .setFooter({
-                icon_url: config.ui.icon_url,
+                iconURL: config.ui.icon_url,
                 text: config.ui.title
             });
 
@@ -75,7 +75,7 @@ module.exports = {
                 { name: "\u200b", value: "Используй команду в любом доступном канале `/profile` как показано ниже." },
             )
             .setFooter({
-                icon_url: config.ui.icon_url,
+                iconURL: config.ui.icon_url,
                 text: config.ui.title
             });
 
@@ -92,7 +92,7 @@ module.exports = {
                 { name: "\u200b", value: "Используй команду в любом доступном канале `/invite` как показано ниже." },
             )
             .setFooter({
-                icon_url: config.ui.icon_url,
+                iconURL: config.ui.icon_url,
                 text: config.ui.title
             });
 
