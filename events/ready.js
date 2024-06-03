@@ -45,35 +45,13 @@ module.exports = {
          */
         const timeFormat    = 'hh:mm';
         var timeCurrent     = moment();
-        var timeLimitStart  = moment('11:30', timeFormat);
-        var timeLimitEnd    = moment('12:30', timeFormat);
+        var timeLimitStart  = moment('18:00', timeFormat);
+        var timeLimitEnd    = moment('19:30', timeFormat);
 
         if (timeCurrent.isBetween(timeLimitStart, timeLimitEnd)) {
             const Play2Channel  = client.channels.cache.get(config.log_channels.play2);
             const BadgeRequestChannel  = client.channels.cache.get(config.log_channels.achievements);
 
-            // Step 1. Clear the Play2gether and Badges Request channel
-            if (!Play2Channel) {
-                BotLogChannel.send({ content: `[PLAY2] ERROR: Invites channel not found!` });
-            }
-            Play2Channel.messages.fetch({ limit: 99 }).then(messages => {
-                Play2Channel.bulkDelete(messages, true).then(messages => {
-                    BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
-                })
-                .catch(console.error);
-            });
-
-            if (!BadgeRequestChannel) {
-                BotLogChannel.send({ content: `[BADGES] ERROR: Requests channel not found!` });
-            }
-            BadgeRequestChannel.messages.fetch({ limit: 99 }).then(messages => {
-                BadgeRequestChannel.bulkDelete(messages, true).then(messages => {
-                    BotLogChannel.send({ content: `[AUTOMATION] BADGES: Requests channel has been cleared.` });
-                }).catch(console.error);
-
-            });
-
-            // Step 2. Create a new embed message with the Play2gether command info and Badges Request info
             var Play2IntroEmbed = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)
                 .setTitle( "— Будем играть вместе!" )
@@ -102,9 +80,26 @@ module.exports = {
                 text: config.ui.title
             });
 
-            // Step 3. Send the embed message to the channels
-            Play2Channel.send({ embeds: [Play2IntroEmbed] });
-            BadgeRequestChannel.send({ embeds: [BadgesIntroEmbed] });
+            if (!Play2Channel) {
+                BotLogChannel.send({ content: `[PLAY2] ERROR: Invites channel not found!` });
+            }
+            Play2Channel.messages.fetch({ limit: 99 }).then(messages => {
+                Play2Channel.bulkDelete(messages, true).then(messages => {
+                    BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
+                    Play2Channel.send({ embeds: [Play2IntroEmbed] });
+                }).catch(console.error);
+            });
+
+            if (!BadgeRequestChannel) {
+                BotLogChannel.send({ content: `[BADGES] ERROR: Requests channel not found!` });
+            }
+            BadgeRequestChannel.messages.fetch({ limit: 99 }).then(messages => {
+                BadgeRequestChannel.bulkDelete(messages, true).then(messages => {
+                    BotLogChannel.send({ content: `[AUTOMATION] BADGES: Requests channel has been cleared.` });
+                    BadgeRequestChannel.send({ embeds: [BadgesIntroEmbed] });
+                }).catch(console.error);
+            });
+
         } else {
             BotLogChannel.send({ content: `[AUTOMATION] Play2gether & Badges Requests channels has not been cleared. Current time not within limit.` });
         }
