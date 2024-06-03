@@ -57,16 +57,20 @@ module.exports = {
                 BotLogChannel.send({ content: `[PLAY2] ERROR: Invites channel not found!` });
             }
             Play2Channel.messages.fetch({ limit: 99 }).then(messages => {
-                Play2Channel.bulkDelete(messages);
-                BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
+                Play2Channel.bulkDelete(messages, true).then(messages => {
+                    BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
+                })
+                .catch(console.error);
             });
 
             if (!BadgeRequestChannel) {
                 BotLogChannel.send({ content: `[BADGES] ERROR: Requests channel not found!` });
             }
             BadgeRequestChannel.messages.fetch({ limit: 99 }).then(messages => {
-                BadgeRequestChannel.bulkDelete(messages);
-                BotLogChannel.send({ content: `[AUTOMATION] BADGES: Requests channel has been cleared.` });
+                BadgeRequestChannel.bulkDelete(messages, true).then(messages => {
+                    BotLogChannel.send({ content: `[AUTOMATION] BADGES: Requests channel has been cleared.` });
+                }).catch(console.error);
+
             });
 
             // Step 2. Create a new embed message with the Play2gether command info and Badges Request info
