@@ -45,8 +45,8 @@ module.exports = {
          */
         const timeFormat    = 'hh:mm';
         var timeCurrent     = moment();
-        var timeLimitStart  = moment('18:00', timeFormat);
-        var timeLimitEnd    = moment('19:30', timeFormat);
+        var timeLimitStart  = moment('11:30', timeFormat);
+        var timeLimitEnd    = moment('12:30', timeFormat);
 
         if (timeCurrent.isBetween(timeLimitStart, timeLimitEnd)) {
             const Play2Channel  = client.channels.cache.get(config.log_channels.play2);
