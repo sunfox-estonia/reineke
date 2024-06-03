@@ -126,7 +126,7 @@ module.exports = {
     ),
 
 async execute(interaction) {
-        const NotificationsChannel = interaction.client.channels.cache.get(config.log_channels.notifictions);
+        const NotificationsChannel = interaction.client.channels.cache.get(config.log_channels.play2);
         const BotLogChannel = interaction.client.channels.cache.get(config.log_channels.log);
         const party_channel = interaction.options.getChannel('channel');
         const party_time = interaction.options.getString('time');
@@ -284,9 +284,6 @@ async execute(interaction) {
 									if (UserAchievements.steamID !== undefined) {
 										CommendationsList = ['220', '219', '221', '222'];
 										var Badges = "";
-
-                                        console.log(UserAchievements.achievements);
-
 										let i = 0;
 										while (i < CommendationsList.length) {
 											var getOne = getAchievemntStatusByCode(UserAchievements.achievements, CommendationsList[i]);
