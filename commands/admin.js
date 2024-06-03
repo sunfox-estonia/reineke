@@ -108,7 +108,7 @@ module.exports = {
                                             interaction.reply({ content: '— Возникла ошибка при подсчете pp!', ephemeral: true });
                                         } else {
                                             var total_pp = JSON.parse(JSON.stringify(dataset2));
-                                            BotLogChannel.send({ content: `ACHIEVEMENT ADDED: to user <@` + DiscordUser.user.id + `> - (` + achievement_data.comedation_code + `) ` + achievement_data.comedation_title + `\nUser user PowerPoints sum: ` + total_pp + `\n`+ `Created by <@` + interaction.user.id + `>` });
+                                            BotLogChannel.send({ content: `[ADMIN] BADGES: Added to user <@` + DiscordUser.user.id + `> - (` + achievement_data.comedation_code + `) ` + achievement_data.comedation_title + `\nUser user PowerPoints sum: ` + total_pp + `\n`+ `Created by <@` + interaction.user.id + `>` });
                                         }
                                     });
 
@@ -187,7 +187,7 @@ module.exports = {
                         database.query(sql6, [DiscordUser.user.id, gift, giftData.title, giftData.description, key], (error, pingback) => {
                             if (error) {
                                 interaction.reply({ content: "Ошибка при добавлении подарка в базу данных.", ephemeral: true });
-                                BotLogChannel.send({ content: `ERROR: Can't add gift (code: ` + gift + `) for user <@` + DiscordUser.user.id + `> to database. Created by: <@` + interaction.user.id + `>` });
+                                BotLogChannel.send({ content: `[ADMIN] GIFTS: Can't add gift (code: ` + gift + `) for user <@` + DiscordUser.user.id + `> to database. Created by: <@` + interaction.user.id + `>` });
                                 return;
                             } else {
                                 let embed_username = DiscordUser.nickname ?? DiscordUser.user.username;
@@ -212,13 +212,13 @@ module.exports = {
                                 .addComponents(GiftLinkBtn);
 
                                 NotificationsChannel.send({content:`— <@` + DiscordUser.user.id + `>, смотри, что для Тебя есть:`, embeds: [gift_embed], components: [ButtonsRow2]});
-                                BotLogChannel.send({ content: `GIFT ADDED: to user <@` + DiscordUser.user.id + `> - (` + gift + `) ` + giftData.title + `\nCreated by <@` + interaction.user.id + `>` });
+                                BotLogChannel.send({ content: `[ADMIN] GIFTS: Added to user <@` + DiscordUser.user.id + `> - (` + gift + `) ` + giftData.title + `\nCreated by <@` + interaction.user.id + `>` });
                                 interaction.reply({ content: '— Добавил подарок указанному пользователю!', ephemeral: true });
                             }
                         });
                     } else {
                         interaction.reply({ content: "— Не могу выдать подарок указанному пользователю!", ephemeral: true });
-                        BotLogChannel.send({ content: `ERROR: Can't get gift data for the code ` + gift + `. Runned by: <@` + interaction.user.id + `>` });
+                        BotLogChannel.send({ content: `[ADMIN] GIFTS: Can't get gift data for the code ` + gift + `. Runned by: <@` + interaction.user.id + `>` });
                     }
                 });
         }
@@ -230,18 +230,18 @@ checkComedation = function(user_discord_uid, comedation_code, callback) {
     let sql2 = "SELECT * FROM dir_comedations WHERE comedation_code = ? LIMIT 1;";
     database.query(sql2, [comedation_code], (error2, comedation_fulldata, fields) => {
         if (error2) {
-            callback("Database error on achievement selection.",null);
+            callback("[ADMIN] BADGES: Database error on achievement selection.",null);
             return;
         }
         if (comedation_fulldata.length != 1){
-            callback("Achievement doesn't added to database.",null);
+            callback("[ADMIN] BADGES: Achievement doesn't added to database.",null);
             return;
         }
         // Check if achivement is already added for selected user
         let sql3 = "SELECT count(*) AS rowscount FROM user_comedations WHERE user_discord_uid = ? AND comedation_code = ?;";
         database.query(sql3, [user_discord_uid,comedation_code], (error3, check_added, fields) => {
             if (error3) {
-                callback("Database error on achievement check.",null);
+                callback("[ADMIN] BADGES: Database error on achievement check.",null);
                 return;
             }
             if (check_added[0].rowscount > 0){

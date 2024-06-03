@@ -1,4 +1,4 @@
-const { Events, EmbedBuilder, PresenceUpdateStatus  } = require('discord.js');
+const { Events, EmbedBuilder, PresenceUpdateStatus, ActivityType } = require('discord.js');
 const config = require('../config.json');
 const mysql = require('mysql');
 const moment = require('moment');
@@ -31,7 +31,9 @@ module.exports = {
 
         // Set the bot status
         client.user.setPresence({
-            activities: [{ name: config.status.text }],
+            activities: [{
+                type: ActivityType.Watching,
+                name: config.status.text }],
             status: PresenceUpdateStatus.Online
         });
 
@@ -44,22 +46,31 @@ module.exports = {
         const timeFormat    = 'hh:mm';
         var timeCurrent     = moment();
         var timeLimitStart  = moment('11:30', timeFormat);
-        var timeLimitEnd    = moment('13:30', timeFormat);
+        var timeLimitEnd    = moment('12:30', timeFormat);
 
         if (timeCurrent.isBetween(timeLimitStart, timeLimitEnd)) {
             const Play2Channel  = client.channels.cache.get(config.log_channels.play2);
+            const BadgeRequestChannel  = client.channels.cache.get(config.log_channels.achievements);
 
-            // Step 1. Clear the Play2gether channel
+            // Step 1. Clear the Play2gether and Badges Request channel
             if (!Play2Channel) {
                 BotLogChannel.send({ content: `[PLAY2] ERROR: Invites channel not found!` });
             }
             Play2Channel.messages.fetch({ limit: 99 }).then(messages => {
                 Play2Channel.bulkDelete(messages);
-                BotLogChannel.send({ content: `[PLAY2] Invites channel has been cleared.` });
+                BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
             });
 
-            // Step 2. Create a new embed message with the Play2gether command info
-            var play2_intro_embed = new EmbedBuilder()
+            if (!BadgeRequestChannel) {
+                BotLogChannel.send({ content: `[BADGES] ERROR: Requests channel not found!` });
+            }
+            BadgeRequestChannel.messages.fetch({ limit: 99 }).then(messages => {
+                BadgeRequestChannel.bulkDelete(messages);
+                BotLogChannel.send({ content: `[AUTOMATION] BADGES: Requests channel has been cleared.` });
+            });
+
+            // Step 2. Create a new embed message with the Play2gether command info and Badges Request info
+            var Play2IntroEmbed = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)
                 .setTitle( "— Будем играть вместе!" )
                 .setDescription("Приглашай участников сообщества в кооперативные игры с помощью команды `/play2gether`. Доступно два режима использования команды: для экипажей Sea of Thieves, и для других игр.")
@@ -74,10 +85,24 @@ module.exports = {
                 text: config.ui.title
             });
 
-            // Step 3. Send the embed message to the Play2gether channel
-            Play2Channel.send({ embeds: [play2_intro_embed] });
+            var BadgesIntroEmbed = new EmbedBuilder()
+                .setColor(config.colors.primaryDark)
+                .setTitle( "— Покажи-ка, что интересного у тебя есть?" )
+                .setDescription("Чтобы получить достижения сообщества, в этом канале нужно предоставить доказательства, подтверждающие выполнение действий, необходимых для получения ачивки. Просмотреть весь список доступных достижений можно на сайте sunfox.ee/profile](https://sunfox.ee/profile).")
+            .addFields(
+                { name: "Редкие достижения", value: "Редкие достижения демонстрируются в профиле пользователя по команде `/profile` — на зависть остальным! Достижения, выполненные в кооперативных играх, показаны в приглашении, созданном с помощью команды `/play2gether`. Редкие достижения могут быть выданы задним числом." },
+                { name: "\u200b", value: "В этом чате включен медленный режим. Постарайся отправить доказательства одним сообщением. Не забудь указать название желаемой ачивки!" },
+            )
+            .setFooter({
+                icon_url: config.ui.icon_url,
+                text: config.ui.title
+            });
+
+            // Step 3. Send the embed message to the channels
+            Play2Channel.send({ embeds: [Play2IntroEmbed] });
+            BadgeRequestChannel.send({ embeds: [BadgesIntroEmbed] });
         } else {
-            BotLogChannel.send({ content: `[PLAY2] Invites channel has not been cleared. Current time not within limit.` });
+            BotLogChannel.send({ content: `[AUTOMATION] Play2gether & Badges Requests channels has not been cleared. Current time not within limit.` });
         }
 
     },

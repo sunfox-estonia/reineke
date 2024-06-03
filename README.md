@@ -13,6 +13,7 @@
     "log_channels": {
         "notifictions": "user notifications channel ID here",
         "play2" : "/play2gether command notifications channel ID here",
+        "achievements": "channel where badges requests can be sent",
         "log": "bot system log channel ID here"
     },
     "db_config": {
@@ -56,7 +57,7 @@
         }
     },
     "status": {
-        "text": "Изучает /help"
+        "text": "Bot status string"
     }
 }
 ```
