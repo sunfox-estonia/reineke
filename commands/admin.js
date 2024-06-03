@@ -153,14 +153,14 @@ module.exports = {
                                                             var stream = canvas.createPNGStream();
                                                             stream.pipe(out);
                                                             out.on('finish', () => {
-                                                                // interaction.reply({ content: '— Добавил достижение указанному пользователю!', ephemeral: true });
+                                                                interaction.reply({ content: '— Добавил достижение указанному пользователю!', ephemeral: true });
                                                             });
                                                         })
                                                     })
                                                 })
                                             });
                                         } else {
-                                            // interaction.reply({ content: '— Добавил достижение указанному пользователю!', ephemeral: true });
+                                            interaction.reply({ content: '— Добавил достижение указанному пользователю!', ephemeral: true });
                                         }
                                     });
                                 }
@@ -204,7 +204,7 @@ module.exports = {
                                 });
 
                                 var GiftLinkBtn = new ButtonBuilder()
-                                .setLabel('Смотреть подарки')
+                                .setLabel('Посмотреть подарки')
                                 .setURL(ProfileUri)
                                 .setStyle(ButtonStyle.Link);
 

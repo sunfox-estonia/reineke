@@ -151,7 +151,7 @@ getUserProfile = function (UserDiscordUid, callback) {
     }
 
 countUserPowerPoints = function (UserDiscordUid, callback) {
-    let sql2 = `SELECT SUM(dir_comedations.comedation_pp) AS total_pp
+    let sql2 = `SELECT COALESCE(SUM(dir_comedations.comedation_pp),0)  AS total_pp
                 FROM user_comedations
                 JOIN dir_comedations ON user_comedations.comedation_code = dir_comedations.comedation_code
                 WHERE user_comedations.user_discord_uid = ?`;
