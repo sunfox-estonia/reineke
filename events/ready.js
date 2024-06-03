@@ -29,6 +29,16 @@ module.exports = {
 
         const BotLogChannel = client.channels.cache.get(config.log_channels.log);
 
+        // Set the bot status
+        client.user.setPresence({
+            activities: [{
+                name: config.status.text,
+                type: ActivityType.Watching,
+            }],
+            status: 'online'
+        });
+
+
         /* Play2gether channel praparing block
          * We should delete all messages in a play2gether channel
          * and create a new embed message with the information
