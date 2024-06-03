@@ -36,6 +36,9 @@ module.exports = {
          */
         await interaction.guild.members.fetch(user_discord_uid).then(
         DiscordUser => {
+            console.log(DiscordUser.user.avatar);
+            const user_avatar = (DiscordUser.user.avatar == null) ? config.ui.userpic : "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" ;
+
             getUserProfile(DiscordUser.user.id, function (error, dataset1) {
                 if (error) {
                     interaction.reply({ content: '— Кажется, у  меня нет доступа к записям прямо сейчас. Извини!', ephemeral: true });
@@ -52,7 +55,7 @@ module.exports = {
                         var user_timezone = user_data.user_timezone == null ? "Europe/Tallinn" : user_data.user_timezone;
 
                         const ProfileEmbed = new EmbedBuilder()
-                        .setAuthor({ name: DiscordUser.displayName, iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
+                        .setAuthor({ name: DiscordUser.displayName, iconURL: user_avatar })
                         .setColor(config.colors.primaryDark)
                         .addFields(
                             { name: "Время:", value: '`' + moment().tz(user_timezone).format('HH:mm') + '`'}

@@ -216,11 +216,13 @@ async execute(interaction) {
 
                 await interaction.guild.members.fetch(interaction.member.user.id).then( DiscordUser => {
                     var time_to_go = fetchTimestamp(party_time);
+                    const user_avatar = (DiscordUser.user.avatar == null) ? config.ui.userpic : "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" ;
+
 					if (ship_task === 'raid') {
 
 						var invite_embed = new EmbedBuilder()
 							.setColor(config.colors.primaryBright)
-							.setAuthor({ name: DiscordUser.displayName + " собирает рейд.", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
+							.setAuthor({ name: DiscordUser.displayName + " собирает рейд.", iconURL: user_avatar })
 							.setDescription("Начало сессии - <t:" + time_to_go + ":R>")
 							.setThumbnail(config.url.resourcesUrl + "img/glitterbeard/" + img_ship_mission + ".png")
 							.addFields(
@@ -245,7 +247,7 @@ async execute(interaction) {
 					}else{
 						var invite_embed = new EmbedBuilder()
 							.setColor(config.colors.primaryBright)
-							.setAuthor({ name: DiscordUser.displayName + " собирает команду.", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
+							.setAuthor({ name: DiscordUser.displayName + " собирает команду.", iconURL: user_avatar })
 							.setDescription("Начало сессии - <t:" + time_to_go + ":R>")
 							.setThumbnail(config.url.resourcesUrl + "img/glitterbeard/" + img_ship_mission + ".png")
 							.addFields(
@@ -341,6 +343,7 @@ async execute(interaction) {
             await interaction.guild.members.fetch(interaction.member.user.id).then( DiscordUser => {
                 const time_to_go = fetchTimestamp(party_time);
                 const steam_app_id = interaction.options.getString('game');
+                const user_avatar = (DiscordUser.user.avatar == null) ? config.ui.userpic : "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" ;
 
                 console.log(steam_app_id);
 
@@ -351,7 +354,7 @@ async execute(interaction) {
                         steam.getGameDetails(steam_app_id).then(SteamApp => {
                             var invite_embed = new EmbedBuilder()
                                 .setColor(config.colors.primaryBright)
-                                .setAuthor({ name: DiscordUser.displayName + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
+                                .setAuthor({ name: DiscordUser.displayName + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: user_avatar })
                                 .setDescription("Начало сессии - <t:" + time_to_go + ":R>")
                                 .setThumbnail(config.url.resourcesUrl + "img/alerts/alert_playtogether.png")
                                 .setImage(SteamApp.header_image)
@@ -393,7 +396,7 @@ async execute(interaction) {
                                 const BifrostUri = 'https://bifrost.snfx.ee/steam/'+SteamApp.steam_appid+'/'+SteamUser.steamID;
                                 var invite_embed = new EmbedBuilder()
                                     .setColor(config.colors.primaryBright)
-                                    .setAuthor({ name: DiscordUser.displayName + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" })
+                                    .setAuthor({ name: DiscordUser.displayName + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: user_avatar })
                                     .setDescription("Начало сессии - <t:" + time_to_go + ":R>")
                                     .setThumbnail(config.url.resourcesUrl + "img/alerts/alert_playtogether.png")
                                     .setImage(SteamApp.header_image)
