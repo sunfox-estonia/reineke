@@ -19,9 +19,9 @@ module.exports = {
         *  Select member data out from the
         *  users table.
         */
-        let sql1 = "SELECT * FROM users WHERE user_discord_uid = ? LIMIT 1;";
-        database.query(sql1, [member.user.id], (error1, dataset1) => {
-            if (error1) {
+
+        getUserProfile(member.user.id, function (error, dataset1) {
+            if (error) {
                 BotLogChannel.send({ content: `[INVITE] JOIN ERROR: Can't get user ${member.user} data. Database error.` });
                 return;
             } else if (dataset1.length != 1) {
@@ -31,27 +31,30 @@ module.exports = {
             } else {
                 var user_data_prep = JSON.parse(JSON.stringify(dataset1));
                 var user_data = user_data_prep[0];
-
-                /* Step 2
-                *  Assign default role to user
-                */
-                member.roles.add(config.roles.newbie);
-
                 /* Step 3
                 *  Assign config.roles.community role to user
                 *  regarding the user_data.user_landing value
+                *  Add default role.
                 */
-                var communityRole = config.roles.community.find(communityRole => communityRole.key === user_data.user_landing);
-                if (communityRole) {
-                    member.roles.add(communityRole.id);
+
+                /*
+                for (var key in config.roles.community) {
+                    if (key === user_data.user_landing) {
+                        var communityRole = config.roles.community[key];
+                        if(user_data.user_landing != "common"){
+                            member.roles.add([config.roles.level.newbie, communityRole]);
+                        } else {
+                            member.roles.add(config.roles.level.newbie);
+                        }
+                    }
                 }
+                */
+                member.roles.add(config.roles.level.newbie);
+
 
                 /* Step 4
-                 * Change user Nicename on the server regarding
-                 * the user_data.user_name value
-                 * and communityRole value
-                 */
-
+                *  Set user nickname to user_data.user_name
+                */
                 if (user_data.user_name) {
                     member.setNickname(user_data.user_name);
                 }
@@ -62,3 +65,27 @@ module.exports = {
         });
     },
 };
+
+getNewbieProfile = function (UserDiscordUid, callback) {
+    let sql1 = `SELECT * FROM users WHERE user_discord_uid = ? LIMIT 1;`;
+    database.query(sql1, [UserDiscordUid], function (error, result) {
+        if (error) {
+            callback("Database error.",null);
+            BotLogChannel.send({ content: `[SYSTEM] DB ERROR: guildMemberAdd/getUserProfile function error.`});
+        } else {
+            callback(null, result);
+        }
+    });
+    // getNewbieProfile ends here
+    }
+
+function getValues(obj, key) {
+    for (var i in obj) {
+        if (!obj.hasOwnProperty(i)) continue;
+        if (typeof obj[i] == 'object') {
+            return getValues(obj[i], key);
+        } else if (i == key) {
+            return 'false';
+        }
+    }
+}
