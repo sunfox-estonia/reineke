@@ -36,21 +36,13 @@ module.exports = {
                 *  regarding the user_data.user_landing value
                 *  Add default role.
                 */
-
-                /*
                 for (var key in config.roles.community) {
                     if (key === user_data.user_landing) {
+                        console.log("User is: " + key);
                         var communityRole = config.roles.community[key];
-                        if(user_data.user_landing != "common"){
-                            member.roles.add([config.roles.level.newbie, communityRole]);
-                        } else {
-                            member.roles.add(config.roles.level.newbie);
-                        }
+                        member.roles.add([config.roles.level.newbie, communityRole]);
                     }
                 }
-                */
-                member.roles.add(config.roles.level.newbie);
-
 
                 /* Step 4
                 *  Set user nickname to user_data.user_name

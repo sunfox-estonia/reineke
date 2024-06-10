@@ -9,7 +9,7 @@ const database = mysql.createConnection({
     debug: false,
     multipleStatements: true,
 });
-const moment = require('moment-timezone');
+const momenttz = require('moment-timezone');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -36,7 +36,6 @@ module.exports = {
          */
         await interaction.guild.members.fetch(user_discord_uid).then(
         DiscordUser => {
-            console.log(DiscordUser.user.avatar);
             const user_avatar = (DiscordUser.user.avatar == null) ? config.ui.userpic : "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" ;
 
             getUserProfile(DiscordUser.user.id, function (error, dataset1) {
@@ -58,7 +57,7 @@ module.exports = {
                         .setAuthor({ name: DiscordUser.displayName, iconURL: user_avatar })
                         .setColor(config.colors.primaryDark)
                         .addFields(
-                            { name: "Время:", value: '`' + moment().tz(user_timezone).format('HH:mm') + '`'}
+                            { name: "Время:", value: '`' + momenttz().tz(user_timezone).format('HH:mm') + '`'}
                         )
                         .setTimestamp()
                         .setFooter({
@@ -103,8 +102,7 @@ module.exports = {
                                 if (error) {
 
                                 } else if (dataset2.length > 0) {
-                                    var profile_comedations_url = config.buffer.images.url + 'p_c_' + DiscordUser.user.id + '.png?' + moment().unix();
-                                    console.log(profile_comedations_url);
+                                    var profile_comedations_url = config.buffer.images.url + 'p_c_' + DiscordUser.user.id + '.png?' + momenttz().unix();
                                     ProfileEmbed.setImage(profile_comedations_url);
                                     ProfileEmbed.addFields(
                                         { name: '\u200b', value: '**Лучшие достижения ' + DiscordUser.displayName + ':**' }

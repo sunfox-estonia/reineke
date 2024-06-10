@@ -288,7 +288,7 @@ async execute(interaction) {
 										var Badges = "";
 										let i = 0;
 										while (i < CommendationsList.length) {
-											var getOne = getAchievemntStatusByCode(UserAchievements.achievements, CommendationsList[i]);
+											var getOne = getAchievementStatusByCode(UserAchievements.achievements, CommendationsList[i]);
 											let getOneStatus = getOne[0]['achieved'];
 											if (getOneStatus == true) {
 												Badges += "1";
@@ -345,13 +345,13 @@ async execute(interaction) {
                 const steam_app_id = interaction.options.getString('game');
                 const user_avatar = (DiscordUser.user.avatar == null) ? config.ui.userpic : "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" ;
 
-                console.log(steam_app_id);
-
-                getSteam(interaction.member.user.id, function (error, steam_data) {
+                getSteam(interaction.member.user.id, function (error, dataset1) {
                     if (error) {
                         // If there is no Steam profile available
 
                         steam.getGameDetails(steam_app_id).then(SteamApp => {
+
+
                             var invite_embed = new EmbedBuilder()
                                 .setColor(config.colors.primaryBright)
                                 .setAuthor({ name: DiscordUser.displayName + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: user_avatar })
@@ -377,9 +377,12 @@ async execute(interaction) {
                             BotLogChannel.send({ content: `[PLAY2] <@` + DiscordUser.user.id + `> creates a **/play2gether** invite - ` + SteamApp.name });
                         });
                     } else {
+                        var steam_data_prep = JSON.parse(JSON.stringify(dataset1));
+                        var steam_data = steam_data_prep[0];
+
                         steam.getUserSummary(steam_data.user_steam_uid).then(SteamUser => {
                             // Get Steam application data
-
+                            console.log(steam_data.user_steam_uid);
                             /*
                              * Create an invite to play
                              */
@@ -457,16 +460,16 @@ getSteam = function (UserDiscordUid, callback) {
 fetchTimestamp = function (interval) {
     switch (interval) {
         case '15':
-            var unix_time = moment().add(15, 'minutes').format('X');
+            var unix_time = moment().add(15, 'minutes').unix();
             break;
         case '30':
-            var unix_time = moment().add(30, 'minutes').format('X');
+            var unix_time = moment().add(30, 'minutes').unix();
             break;
         case '60':
-            var unix_time = moment().endOf('hour').fromNow().format("X");
+            var unix_time = moment().endOf('hour').unix();
             break;
         default:
-            var unix_time = moment().format("X");
+            var unix_time = moment().unix();
             break;
     }
     return unix_time;
