@@ -68,39 +68,34 @@ module.exports = {
             });
 
             // SoT Predefine buttons
-            // var Play2ButtonSot1 = new ButtonBuilder()
-            // .setLabel('PVP - Слуги Пламени')
-            // .setCustomId('play2_sot1')
-            // .setEmoji("<:ship_brig:1155489530900660294>")
-            // .setStyle(ButtonStyle.Secondary);
+            var Play2ButtonSot1 = new ButtonBuilder()
+            .setLabel('PVP - Слуги Пламени')
+            .setCustomId('play2_sot1')
+            .setEmoji("<:ship_brig:1155489530900660294>")
+            .setStyle(ButtonStyle.Secondary);
 
-            // var Play2ButtonSot2 = new ButtonBuilder()
-            // .setLabel('PVP - Открытый мир')
-            // .setCustomId('play2_sot2')
-            // .setEmoji("<:ship_sloop:1155489536349057095>")
-            // .setStyle(ButtonStyle.Secondary);
+            var Play2ButtonSot2 = new ButtonBuilder()
+            .setLabel('PVP - Открытый мир')
+            .setCustomId('play2_sot2')
+            .setEmoji("<:ship_sloop:1155489536349057095>")
+            .setStyle(ButtonStyle.Secondary);
 
-            // var Play2ButtonSot3 = new ButtonBuilder()
-            // .setLabel('Farm - Гильдия')
-            // .setCustomId('play2_sot3')
-            // .setEmoji("<:ship_brig:1155489530900660294>")
-            // .setStyle(ButtonStyle.Secondary);
+            var Play2ButtonSot3 = new ButtonBuilder()
+            .setLabel('Farm - Гильдия')
+            .setCustomId('play2_sot3')
+            .setEmoji("<:ship_brig:1155489530900660294>")
+            .setStyle(ButtonStyle.Secondary);
 
             var Play2ButtonValheim = new ButtonBuilder()
             .setLabel('Sunfox Valheim')
             .setURL('https://bifrost.snfx.ee/steam/892970/server/common')
             .setStyle(ButtonStyle.Link);
 
-            var Play2ButtonRust = new ButtonBuilder()
-            .setLabel('MrGOPY Rust Server')
-            .setURL('https://bifrost.snfx.ee/steam/252490/server/common')
-            .setStyle(ButtonStyle.Link);
+            var Play2SotRow = new ActionRowBuilder()
+                .addComponents(Play2ButtonSot1, Play2ButtonSot2, Play2ButtonSot3);
 
-            // var Play2IntroSotButtons = new ActionRowBuilder()
-            //     .addComponents(Play2ButtonSot1, Play2ButtonSot2, Play2ButtonSot3);
-
-            var Play2IntroSunfoxButtons = new ActionRowBuilder()
-                .addComponents(Play2ButtonValheim, Play2ButtonRust);
+            var Play2SunfoxRow = new ActionRowBuilder()
+                .addComponents(Play2ButtonValheim);
 
             var BadgesIntroEmbed = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)
@@ -121,7 +116,7 @@ module.exports = {
             Play2Channel.messages.fetch({ limit: 99 }).then(messages => {
                 Play2Channel.bulkDelete(messages, true).then(messages => {
                     BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
-                    Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2IntroSunfoxButtons] });
+                    Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2SotRow, Play2SunfoxRow] });
                 }).catch(console.error);
             });
 

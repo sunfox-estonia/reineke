@@ -16,6 +16,9 @@
         "achievements": "channel where badges requests can be sent",
         "log": "bot system log channel ID here"
     },
+    "voice_channels": {
+        "play2": "/play2gether command default voice channel"
+    },
     "db_config": {
         "host": "localhost",
         "dbname": "database title",
