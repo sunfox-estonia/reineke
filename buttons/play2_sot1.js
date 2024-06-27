@@ -62,7 +62,7 @@ module.exports = {
                         });
                         interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
 
-                        BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite`});
+                        BotLogChannel.send({ content: `[PLAY2] BUTTON SOT: <@` + DiscordUser.user.id + `> creates a **/play2gether** invite`});
 
                     } else {
                         var steam_data_prep = JSON.parse(JSON.stringify(dataset1));
@@ -100,7 +100,7 @@ module.exports = {
                                 setTimeout(() => repliedMessage.delete(), 600000);
                             });
                             interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
-                            BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite.`});
+                            BotLogChannel.send({ content: `[PLAY2] BUTTON SOT: <@` + DiscordUser.user.id + `> creates a **/play2gether** invite.`});
 
                         })
                         .catch(error => {
@@ -109,7 +109,7 @@ module.exports = {
                             });
                             interaction.reply({ content: '— Приглашение создано!', ephemeral: true });
 
-                            BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite, but Steam achievements has not been fetched.`});
+                            BotLogChannel.send({ content: `[PLAY2] BUTTON SOT: <@` + DiscordUser.user.id + `> created a **/play2gether** invite, but Steam achievements has not been fetched.`});
                         });
                     }
                 });

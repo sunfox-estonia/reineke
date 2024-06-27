@@ -2,6 +2,7 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ButtonBuilder, B
 const config = require('../config.json');
 const fs = require('node:fs');
 const lists = require('../config.lists.json');
+const hints  = require('../config.hints.json');
 const mysql = require('mysql');
 const database = mysql.createConnection({
     host: config.db_config.host,
@@ -49,6 +50,20 @@ module.exports = {
                 option.setName('gift_key')
                     .setDescription('Подарочный ключ')
                     .setRequired(true)),
+    )
+    .addSubcommand(subcommand =>
+		subcommand
+			.setName('hint')
+			.setDescription('Отправить подсказку участнику')
+            .addStringOption(option =>
+                option.setName('message_id')
+                    .setDescription('ID сообщения пользователя')
+                    .setRequired(true))
+            .addStringOption(option =>
+                option.setName('hint_code')
+                    .setDescription('Текст подсказки')
+                    .setRequired(true)
+                    .addChoices(...hints.queries)),
     ),
 
     async execute(interaction) {
@@ -221,6 +236,14 @@ module.exports = {
                         BotLogChannel.send({ content: `[ADMIN] GIFTS: Can't get gift data for the code ` + gift + `. Runned by: <@` + interaction.user.id + `>` });
                     }
                 });
+        } else if (interaction.options.getSubcommand() === 'hint') {
+
+            const message = interaction.options.getString('message_id');
+            const hint = interaction.options.getString('hint_code');
+            const hintContent = hints.predefines[hint];
+
+            await interaction.channel.send({ content: hintContent, reply: { messageReference: message }, ephemeral: true });
+
         }
     }
 };

@@ -242,7 +242,7 @@ async execute(interaction) {
 										setTimeout(() => repliedMessage.delete(), 600000);
 									});
 							interaction.reply({ content: '— Приглашение на сбор рейда создано!', ephemeral: true });
-							BotLogChannel.send({ content: `[PLAY2] SOT RAID: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite` });
+							BotLogChannel.send({ content: `[PLAY2] SOT RAID: <@` + DiscordUser.user.id + `> creates a **/play2gether** invite` });
 
 					}else{
 						var invite_embed = new EmbedBuilder()
@@ -272,7 +272,7 @@ async execute(interaction) {
 								});
 								interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
 
-								BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite`});
+								BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> creates a **/play2gether** invite`});
 
 							} else {
                                 var steam_data_prep = JSON.parse(JSON.stringify(dataset1));
@@ -312,7 +312,7 @@ async execute(interaction) {
 										setTimeout(() => repliedMessage.delete(), 600000);
 									});
 									interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
-									BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite.`});
+									BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> creates a **/play2gether** invite.`});
 
 								})
 								.catch(error => {

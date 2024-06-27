@@ -55,7 +55,7 @@ module.exports = {
                 });
                 interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
 
-                BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite`});
+                BotLogChannel.send({ content: `[PLAY2] BUTTON SOT: <@` + DiscordUser.user.id + `> creates a **/play2gether** invite`});
 
             });
         }
