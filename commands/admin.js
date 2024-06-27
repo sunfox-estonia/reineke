@@ -243,7 +243,7 @@ module.exports = {
             const hintContent = hints.predefines[hint];
 
             await interaction.channel.send({ content: hintContent, reply: { messageReference: message }, ephemeral: true });
-
+            interaction.reply({ content: "— Подсказка отправлена!", ephemeral: true });
         }
     }
 };

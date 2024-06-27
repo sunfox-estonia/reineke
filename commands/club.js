@@ -28,7 +28,7 @@ module.exports = {
                 "en-US": 'You do not have permission to execute this command!',
             };
             await interaction.reply(locales[interaction.locale] ?? 'У вас недостаточно прав для выполнения этой команды!');
-            BotLogChannel.send({ content: `ERROR: <@` + DiscordUser.user.id + `> is trying to run **/admin door** command without permission.`});
+            BotLogChannel.send({ content: `ERROR: <@` + DiscordUser.user.id + `> is trying to run **/club door** command without permission.`});
         } else {
 
             /*
