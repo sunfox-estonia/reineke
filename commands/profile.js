@@ -72,11 +72,11 @@ module.exports = {
                                 { name: `Добавить в друзья:`, value: `[<:ico_steam:1246544322321715253> Steam](https://steamcommunity.com/profiles/${user_data.user_steam_uid})`, inline: true },
                             )
                             ProfileEmbed.addFields(
-                                { name: "\u200b", value: `[<:ico_xbox:1246544319947604012> XBOX](https://www.xbox.com/ru-RU/play/user/${user_data.user_xbox_uid})`, inline: true },
+                                { name: "\u200b", value: `[<:ico_xbox:1246544319947604012> XBOX](https://www.xbox.com/ru-RU/play/user/${user_data.user_xbox_uid}) (${user_data.user_xbox_uid})`, inline: true },
                             )
                         } else if (user_data.user_steam_uid == '' && user_data.user_xbox_uid != ''){
                             ProfileEmbed.addFields(
-                                { name: `Добавить в друзья:`, value: `[<:ico_xbox:1246544319947604012> XBOX](https://www.xbox.com/ru-RU/play/user/${user_data.user_xbox_uid})`, inline: true },
+                                { name: `Добавить в друзья:`, value: `[<:ico_xbox:1246544319947604012> XBOX](https://www.xbox.com/ru-RU/play/user/${user_data.user_xbox_uid}) (${user_data.user_xbox_uid})`, inline: true },
                             )
                         } else if (user_data.user_steam_uid != '' && user_data.user_xbox_uid == '') {
                             ProfileEmbed.addFields(
