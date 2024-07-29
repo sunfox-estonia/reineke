@@ -226,8 +226,8 @@ async execute(interaction) {
 							.setDescription("Начало сессии - <t:" + time_to_go + ":R>")
 							.setThumbnail(config.url.resourcesUrl + "img/glitterbeard/" + img_ship_mission + ".png")
 							.addFields(
-								{ name: "Присоединяйся к рейду!", value: "Для участия в рейде Тебе потребуется приложение **FleetCreator**, а также установленный и настроенный **VPN**. Участникам сообщества Sunfox.ee бесплатно предоставляется безопасный VPN-сервис: обратись к Хранителям для получения более подробной информации." },
-								{ name: "Подготовка к рейду:", value: "[Установить и настроить FleetCreator](https://wiki.sunfox.ee/glitterbeard:fleetcreator)\n[Установить и настроить VPN](https://wiki.sunfox.ee/glitterbeard:vpn)" },
+								{ name: "Присоединяйся к рейду!", value: "Для участия в рейде Тебе потребуется установленный и настроенный **VPN**. Участникам сообщества Sunfox.ee бесплатно предоставляется безопасный VPN-сервис: обратись к Хранителям для получения более подробной информации." },
+								{ name: "Подготовка к рейду:", value: "[Установить и настроить VPN](https://wiki.sunfox.ee/glitterbeard:vpn)" },
                                 { name: "Корабль:", value: text_ship_type },
                                 { name: "\u200b", value: "**Добавляйся в голосовой канал:**" },
                                 { name: "<#" + party_channel + ">", value: "\u200b" }
