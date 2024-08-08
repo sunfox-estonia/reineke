@@ -9,8 +9,8 @@ CREATE TABLE `users` (
   `user_xbox_uid` varchar(256),
   `user_timezone` varchar(256) DEFAULT (Europe/Tallinn),
   `user_invite_id` integer,
-  `services_vpn_us` boolean DEFAULT false,
-  `services_vpn_ee` boolean DEFAULT false,
+  `services_vpn_us` varchar(64) NOT NULL DEFAULT ('0'),
+  `services_vpn_ee` varchar(64) NOT NULL DEFAULT ('0'),
   `user_date_created` timestamp DEFAULT (CURRENT_TIMESTAMP),
   `user_date_updated` timestamp,
   `user_date_deleted` timestamp

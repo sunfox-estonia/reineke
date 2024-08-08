@@ -104,8 +104,8 @@ Table users {
   user_xbox_uid varchar(256) [null]
   user_timezone varchar(256) [null, default: `Europe/Tallinn`]
   user_invite_id integer
-  services_vpn_us boolean [default: false]
-  services_vpn_ee boolean [default: false]
+  services_vpn_us varchar(64) [default: `0`]
+  services_vpn_ee varchar(64) [default: `0`]
   user_date_created timestamp [default: `CURRENT_TIMESTAMP`]
   user_date_updated timestamp [null]
   user_date_deleted timestamp [null]

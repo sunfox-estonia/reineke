@@ -64,6 +64,20 @@ module.exports = {
                     .setDescription('Текст подсказки')
                     .setRequired(true)
                     .addChoices(...hints.queries)),
+    )
+    .addSubcommand(subcommand =>
+        subcommand
+            .setName('service')
+            .setDescription('Дообавить сервис участнику')
+            .addUserOption(option =>
+                option.setName('user')
+                    .setDescription('Пользователь')
+                    .setRequired(true))
+            .addStringOption(option =>
+                option.setName('service_code')
+                    .setDescription('Наименование сервиса')
+                    .setRequired(true)
+                    .addChoices(...lists.services)),
     ),
 
     async execute(interaction) {
@@ -237,13 +251,125 @@ module.exports = {
                     }
                 });
         } else if (interaction.options.getSubcommand() === 'hint') {
-
             const message = interaction.options.getString('message_id');
             const hint = interaction.options.getString('hint_code');
             const hintContent = hints.predefines[hint];
 
             await interaction.channel.send({ content: hintContent, reply: { messageReference: message }, ephemeral: true });
             interaction.reply({ content: "— Подсказка отправлена!", ephemeral: true });
+        } else if (interaction.options.getSubcommand() === 'service') {
+            const target_user = interaction.options.getUser('user');
+            const service_code = interaction.options.getString('service_code');
+
+            /* Step 1.
+             * Check if selected user is exists in the database
+             */
+            let sql9 = "SELECT * FROM users WHERE user_discord_uid = ? LIMIT 1;";
+            database.query(sql9, [target_user.id], (error, user_data, fields) => {
+                if (user_data.length != 1 || error) {
+                    interaction.reply({ content: "— Профиль этого пользователя отсутствует в БД или с ним возникли проблемы.", ephemeral: true });
+                } else {
+                    /*
+                    * Step 2.
+                    * Check if selected service is already added to user profile
+                    */
+                    var service_db_title = '';
+
+                    switch (service_code) {
+                        // Service: VPN US
+                        case '101':
+                            service_db_title = 'services_vpn_us';
+                            break;
+                        case '102':
+                            service_db_title = 'services_vpn_ee';
+                            break;
+                    }
+
+                    let sql7 = `SELECT * FROM users WHERE user_discord_uid = ? AND ${service_db_title} <> '0'  LIMIT 1;`;
+                    database.query(sql7, [target_user.id], (error, service_data, fields) => {
+                        if (service_data.length != 1) {
+
+                            /*
+                            * Step 3.
+                            * Show modal window to add the service to user profile
+                            *
+                            * VPN related services
+                            */
+                            if (['101','102'].includes(service_code) ) {
+                                var service_title = "";
+
+                                switch (service_code) {
+                                    case '101':
+                                        service_title = "US.vpn.snfx.ee";
+                                        break;
+
+                                    case '102':
+                                        service_title = "EE.vpn.snfx.ee";
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+
+                                /* Modal form for adding VPN service */
+                                const modal_vpn_common = {
+                                    "title": `Добавить услугу: ${service_title}`,
+                                    "custom_id": "service_vpn_add",
+                                    "components": [
+                                        {
+                                            "type": 1,
+                                            "components": [{
+                                                "type": 4,
+                                                "custom_id": "service_uid",
+                                                "label": "ID пользователя:",
+                                                "style": 1,
+                                                "min_length": 1,
+                                                "max_length": 128,
+                                                "value": target_user.id,
+                                                "required": true
+                                            }]
+                                        },
+                                        {
+                                            "type": 1,
+                                            "components": [{
+                                                "type": 4,
+                                                "custom_id": "service_id",
+                                                "label": "ID услуги:",
+                                                "style": 1,
+                                                "min_length": 1,
+                                                "max_length": 64,
+                                                "value": service_code,
+                                                "required": true
+                                            }]
+                                        },
+                                        {
+                                            "type": 1,
+                                            "components": [{
+                                                "type": 4,
+                                                "custom_id": "service_password",
+                                                "label": "Пароль:",
+                                                "placeholder": "Пароль для доступа к сервису VPN",
+                                                "style": 1,
+                                                "min_length": 1,
+                                                "max_length": 64,
+                                                "required": true
+                                            }]
+                                        }
+                                    ]
+                                };
+
+                                interaction.showModal(modal_vpn_common);
+                            } else {
+                                interaction.reply({ content: "— Не могу добавить эту услугу!", ephemeral: true });
+                            }
+                        } else {
+                            interaction.reply({ content: "— Данная услуга уже добавлена для выбранного пользователя.", ephemeral: true });
+                        }
+                    });
+
+
+                }
+            });
         }
     }
 };
