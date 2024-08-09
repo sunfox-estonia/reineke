@@ -65,6 +65,7 @@ module.exports = {
             default:
                 break;
         }
+        interaction.guild.members.cache.get(discord_user_uid).roles.add(config.roles.services.vpn);
         interaction.reply({ content: '— Добавил услугу указанному пользователю!', ephemeral: true });
     }
 };
