@@ -52,18 +52,13 @@ module.exports = {
                     .setRequired(true)),
     )
     .addSubcommand(subcommand =>
-		subcommand
-			.setName('hint')
-			.setDescription('Отправить подсказку участнику')
-            .addStringOption(option =>
-                option.setName('message_id')
-                    .setDescription('ID сообщения пользователя')
-                    .setRequired(true))
-            .addStringOption(option =>
-                option.setName('hint_code')
-                    .setDescription('Текст подсказки')
-                    .setRequired(true)
-                    .addChoices(...hints.queries)),
+        subcommand
+            .setName('integrations')
+            .setDescription('Настроить интеграции Bifröst Connect для участника')
+            .addUserOption(option =>
+                option.setName('user')
+                    .setDescription('Пользователь')
+                    .setRequired(true)),
     )
     .addSubcommand(subcommand =>
         subcommand
@@ -78,7 +73,22 @@ module.exports = {
                     .setDescription('Наименование сервиса')
                     .setRequired(true)
                     .addChoices(...lists.services)),
+    )
+    .addSubcommand(subcommand =>
+		subcommand
+			.setName('hint')
+			.setDescription('Отправить подсказку участнику')
+            .addStringOption(option =>
+                option.setName('message_id')
+                    .setDescription('ID сообщения пользователя')
+                    .setRequired(true))
+            .addStringOption(option =>
+                option.setName('hint_code')
+                    .setDescription('Текст подсказки')
+                    .setRequired(true)
+                    .addChoices(...hints.queries)),
     ),
+
 
     async execute(interaction) {
         const NotificationsChannel = interaction.client.channels.cache.get(config.log_channels.notifictions);
@@ -368,6 +378,66 @@ module.exports = {
                     });
 
 
+                }
+            });
+        } else if (interaction.options.getSubcommand() === 'integrations') {
+            const target_user = interaction.options.getUser('user').id;
+
+            /* Step 1.
+             * Check if selected user is exists in the database
+             */
+            let sql10 = "SELECT * FROM users WHERE user_discord_uid = ? LIMIT 1;";
+            database.query(sql10, [target_user], (error, user_data, fields) => {
+                if (user_data.length != 1 || error) {
+                    interaction.reply({ content: "— Профиль этого пользователя отсутствует в БД или с ним возникли проблемы.", ephemeral: true });
+                } else {
+                    const modal_bifrost_integrations = {
+                        "title": `Интеграции пользователя`,
+                        "custom_id": "user_connections_edit",
+                        "components": [
+                            {
+                                "type": 1,
+                                "components": [{
+                                    "type": 4,
+                                    "custom_id": "bifrost_uid",
+                                    "label": "ID пользователя:",
+                                    "style": 1,
+                                    "min_length": 1,
+                                    "max_length": 128,
+                                    "value": target_user,
+                                    "required": true
+                                }]
+                            },
+                            {
+                                "type": 1,
+                                "components": [{
+                                    "type": 4,
+                                    "custom_id": "bifrost_steam",
+                                    "label": "Steam ID64:",
+                                    "style": 1,
+                                    "min_length": 1,
+                                    "max_length": 64,
+                                    "value": user_data[0].user_steam_uid,
+                                    "required": true
+                                }]
+                            },
+                            {
+                                "type": 1,
+                                "components": [{
+                                    "type": 4,
+                                    "custom_id": "bifrost_xbox",
+                                    "label": "XBOX username:",
+                                    "style": 1,
+                                    "min_length": 1,
+                                    "max_length": 64,
+                                    "value": user_data[0].user_xbox_uid,
+                                    "required": true
+                                }]
+                            }
+                        ]
+                    };
+
+                    interaction.showModal(modal_bifrost_integrations);
                 }
             });
         }
