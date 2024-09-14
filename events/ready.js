@@ -86,16 +86,16 @@ module.exports = {
             .setEmoji("<:ship_brig:1155489530900660294>")
             .setStyle(ButtonStyle.Secondary);
 
-            var Play2ButtonValheim = new ButtonBuilder()
-            .setLabel('Sunfox Valheim')
-            .setURL('https://bifrost.snfx.ee/steam/892970/server/common')
-            .setStyle(ButtonStyle.Link);
+            // var Play2ButtonValheim = new ButtonBuilder()
+            // .setLabel('Sunfox Valheim')
+            // .setURL('https://bifrost.snfx.ee/steam/892970/server/common')
+            // .setStyle(ButtonStyle.Link);
 
             var Play2SotRow = new ActionRowBuilder()
                 .addComponents(Play2ButtonSot1, Play2ButtonSot2, Play2ButtonSot3);
 
-            var Play2SunfoxRow = new ActionRowBuilder()
-                .addComponents(Play2ButtonValheim);
+            // var Play2SunfoxRow = new ActionRowBuilder()
+            //     .addComponents(Play2ButtonValheim);
 
             var BadgesIntroEmbed = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)
@@ -116,7 +116,7 @@ module.exports = {
             Play2Channel.messages.fetch({ limit: 99 }).then(messages => {
                 Play2Channel.bulkDelete(messages, true).then(messages => {
                     BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
-                    Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2SotRow, Play2SunfoxRow] });
+                    Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2SotRow] });
                 }).catch(console.error);
             });
 

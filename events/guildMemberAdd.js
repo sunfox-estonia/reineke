@@ -26,7 +26,7 @@ module.exports = {
                 return;
             } else if (dataset1.length != 1) {
                 // User is not registered in the database
-                BotLogChannel.send({ content: `[INVITE] JOIN ERROR: Can't get user ${member.user} data. User not found or there are dublicated records in DB` });
+                BotLogChannel.send({ content: `[INVITE] JOIN ERROR: Can't get user ${member.user} data. User not found or there are dublicated records in DB\n> <@&` + config.roles.level.admin + `>, проверить учетную запись пользователя в БД и настроить интеграции.` });
                 return;
             } else {
                 var user_data_prep = JSON.parse(JSON.stringify(dataset1));

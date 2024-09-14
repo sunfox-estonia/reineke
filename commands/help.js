@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 const config = require('../config.json');
 const lists = require('../config.lists.json');
 
@@ -16,13 +16,8 @@ module.exports = {
     )
 	.addSubcommand(subcommand =>
 		subcommand
-			.setName('profile')
-			.setDescription('Просмотреть профиль участника | View member profile')
-    )
-	.addSubcommand(subcommand =>
-		subcommand
-			.setName('club')
-			.setDescription('Уведомления для группы Viru Vikings | Viru Vikings club notifications')
+			.setName('fleetcreator')
+			.setDescription('Настроить FleetCreator для участия в рейде | Configure FleetCreator for raid participation')
     )
 	.addSubcommand(subcommand =>
 		subcommand
@@ -48,39 +43,45 @@ module.exports = {
             });
 
             interaction.reply({ embeds: [HelpPlay2gether], ephemeral: true });
-        } else if (interaction.options.getSubcommand() === 'club') {
-            var HelpClub = new EmbedBuilder()
+        } else if (interaction.options.getSubcommand() === 'fleetcreator') {
+            /*
+             * Generate cridentials for FleetCreator Account
+             */
+
+            var email_prefix = 'glitterbeard';
+            var email_domain = 'sunfox.ee';
+            var personal_code = generatePrefix(4);
+
+            var fc_username = email_prefix + '.' + personal_code;
+            var fc_password = generateStrongPassword(8);
+
+            var Help2MeButton1 = new ButtonBuilder()
+            .setLabel('Подтвердить аккаунт')
+            .setCustomId('help2me_fleet')
+            .setEmoji("<:questsot:1117069619711180810>")
+            .setStyle(ButtonStyle.Secondary);
+
+            var Help2MeRow = new ActionRowBuilder()
+                .addComponents(Help2MeButton1);
+
+            var HelpFleetcreator = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)
-                .setTitle( "Уведомления для участников сообщества Викинги Вирумаа." )
-                .setDescription("")
-                .setImage(config.url.resourcesUrl + "/help/club.gif")
+                .setTitle( "Установка и настройка FleetCreator для участия в рейде" )
+                .setDescription("Для запуска кораблей в рейде Sea of Thieves мы используем программу FleetCreator. Необходимо скачать FleetCreator и зарегистрировать аккаунт, используя сгенерированные учетные данные.")
             .addFields(
-                { name: "/club status", value: "" },
-                { name: "\u200b", value: "Используй команду в любом доступном канале `/club` как показано ниже." },
+                {   name: "Установка FleetCreator",
+                    value: "Перейдите на сайт [FleetCreator](https://www.fleetcreator.com/en/#fc-guide) и скачайте приложение, нажав кнопку **Download**.\nСкачайте архив и распакуйте его содержимое - директорию `FleetCreator_v*`.\n\nЗапустите файл `FleetCreator.exe`, далее нажмите кнопку **Register with FleetCreator**. Используйте для регистрации учетные данные, приведенные ниже."},
+                {   name: "Данные для регистрации:",
+                    value: "- Username: `" + fc_username + "`\n- Email: `" + fc_username + '@' + email_domain + "`\n- Password: `" + fc_password + "`" },
+                {   name: "Подтверждение регистрации",
+                    value: "Зарегистрированный аккаунт необходимо подтвердить. Подтверждение аккаунта осуществляется Хранителями вручную. Нажмите кнопку **Подтвердить аккаунт** под этим сообщением и один из Хранителей сообщит Вам как только аккаунт будет подтвержден.\n\nПосле подтверждения аккаунта Вы сможете войти в него, используя учетные данные, приведенные выше."},
             )
             .setFooter({
                 iconURL: config.ui.icon_url,
                 text: config.ui.title
             });
 
-            interaction.reply({ embeds: [HelpClub], ephemeral: true });
-        } else if (interaction.options.getSubcommand() === 'profile') {
-            var HelpProfile = new EmbedBuilder()
-                .setColor(config.colors.primaryDark)
-                .setTitle( "Просмотр профиля участника сообщества." )
-                .setDescription("")
-                .setImage(config.url.resourcesUrl + "/help/profile.gif")
-            .addFields(
-                { name: "/profile", value: "" },
-                { name: "\u200b", value: "Используй команду в любом доступном канале `/profile` как показано ниже." },
-            )
-            .setFooter({
-                iconURL: config.ui.icon_url,
-                text: config.ui.title
-            });
-
-            interaction.reply({ embeds: [HelpProfile], ephemeral: true });
-
+            interaction.reply({ embeds: [HelpFleetcreator], components: [Help2MeRow],  ephemeral: true });
         } else if (interaction.options.getSubcommand() === 'invite') {
             var HelpInvite = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)
@@ -101,3 +102,23 @@ module.exports = {
         }
     }
 };
+
+function generatePrefix(length) {
+    var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    var prefix = "";
+    for (var i = 0; i < length; i++) {
+        var char = charset.charAt(Math.floor(Math.random() * charset.length));
+        prefix += char;
+    }
+    return prefix;
+}
+
+function generateStrongPassword(length) {
+    var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%";
+    var password = "";
+    for (var i = 0; i < length; i++) {
+        var char = charset.charAt(Math.floor(Math.random() * charset.length));
+        password += char;
+    }
+    return password;
+}

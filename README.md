@@ -27,7 +27,8 @@
     },
     "roles": {
         "level": {
-            "newbie": "newbie role ID"
+            "newbie": "newbie role ID",
+            "admin":  "admin role ID"
         },
         "community": {
             "glitterbeard": "glitterbeard role ID",
