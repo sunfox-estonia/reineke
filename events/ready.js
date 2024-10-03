@@ -1,5 +1,6 @@
 const { Events, EmbedBuilder, PresenceUpdateStatus, ActivityType, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 const config = require('../config.json');
+const lists = require('../config.lists.json');
 const mysql = require('mysql');
 const moment = require('moment');
 const database = mysql.createConnection({
@@ -30,10 +31,11 @@ module.exports = {
         const BotLogChannel = client.channels.cache.get(config.log_channels.log);
 
         // Set the bot status
+        let randomStatus = getRandomStatus();
         client.user.setPresence({
             activities: [{
-                type: ActivityType.Watching,
-                name: config.status.text }],
+                type: ActivityType.Custom,
+                name: randomStatus }],
             status: PresenceUpdateStatus.Online
         });
 
@@ -99,16 +101,22 @@ module.exports = {
 
             var BadgesIntroEmbed = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)
-                .setTitle( "— Покажи-ка, что интересного у тебя есть?" )
-                .setDescription("Чтобы получить достижения сообщества, в этом канале нужно предоставить доказательства, подтверждающие выполнение действий, необходимых для получения ачивки. Просмотреть весь список доступных достижений можно на сайте [sunfox.ee/profile](https://sunfox.ee/profile).")
-            .addFields(
-                { name: "Редкие достижения", value: "Редкие достижения демонстрируются в профиле пользователя по команде `/profile` — на зависть остальным! Достижения, выполненные в кооперативных играх, показаны в приглашении, созданном с помощью команды `/play2gether`. Редкие достижения могут быть выданы задним числом." },
-                { name: "\u200b", value: "В этом чате включен медленный режим. Постарайся отправить доказательства одним сообщением. Не забудь указать название желаемой ачивки!" },
-            )
-            .setFooter({
-                iconURL: config.ui.icon_url,
-                text: config.ui.title
-            });
+                .setTitle( "— Эй, тут задание для тебя!" )
+                .setDescription(`А ты знаешь, как называется наша таверна? Сытый Дракон! Однажды голодный и злой дракон пришел в эти края, а медведь Брюн утихомирил его, напоив свежим элем и накормив сочным мясом. Обитатели Леса любят славного медведя за этот славный поступок!\n\nКстати, у меня есть пара заданий специально для тебя. Посмотри их на странице профиля [sunfox.ee/profile](https://sunfox.ee/profile), а как выполнишь, обязательно расскажи об этом всем нам!`)
+                .setFooter({
+                    iconURL: config.ui.icon_url,
+                    text: config.ui.title
+                });
+
+            let ProfileUri = config.url.commonUrl + "profile/";
+
+            var BadgeProfileLink = new ButtonBuilder()
+            .setLabel('Посмотреть достижения')
+            .setURL(ProfileUri)
+            .setStyle(ButtonStyle.Link);
+
+            var BadgesButtonsRow = new ActionRowBuilder()
+            .addComponents(BadgeProfileLink);
 
             if (!Play2Channel) {
                 BotLogChannel.send({ content: `[PLAY2] ERROR: Invites channel not found!` });
@@ -116,22 +124,29 @@ module.exports = {
             Play2Channel.messages.fetch({ limit: 99 }).then(messages => {
                 Play2Channel.bulkDelete(messages, true).then(messages => {
                     BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
+                    Play2Channel.send({ embeds: [BadgesIntroEmbed], components: [BadgesButtonsRow] });
                     Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2SotRow] });
                 }).catch(console.error);
             });
 
-            if (!BadgeRequestChannel) {
-                BotLogChannel.send({ content: `[BADGES] ERROR: Requests channel not found!` });
-            }
-            BadgeRequestChannel.messages.fetch({ limit: 99 }).then(messages => {
-                BadgeRequestChannel.bulkDelete(messages, true).then(messages => {
-                    BotLogChannel.send({ content: `[AUTOMATION] BADGES: Requests channel has been cleared.` });
-                    BadgeRequestChannel.send({ embeds: [BadgesIntroEmbed] });
-                }).catch(console.error);
-            });
+            // if (!BadgeRequestChannel) {
+            //     BotLogChannel.send({ content: `[BADGES] ERROR: Requests channel not found!` });
+            // }
+            // BadgeRequestChannel.messages.fetch({ limit: 99 }).then(messages => {
+            //     BadgeRequestChannel.bulkDelete(messages, true).then(messages => {
+            //         BotLogChannel.send({ content: `[AUTOMATION] BADGES: Requests channel has been cleared.` });
+            //         BadgeRequestChannel.send({ embeds: [BadgesIntroEmbed] });
+            //     }).catch(console.error);
+            // });
 
         } else {
             BotLogChannel.send({ content: `[AUTOMATION] Play2gether & Badges Requests channels has not been cleared. Current time not within limit.` });
         }
     },
 };
+
+function getRandomStatus() {
+    const statuses = lists.status;
+    const randomIndex = Math.floor(Math.random() * statuses.length);
+    return statuses[randomIndex];
+}
