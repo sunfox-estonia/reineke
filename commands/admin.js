@@ -293,6 +293,9 @@ module.exports = {
                         case '102':
                             service_db_title = 'services_vpn_ee';
                             break;
+                        case '103':
+                            service_db_title = 'services_vpn_vless';
+                            break;
                     }
 
                     let sql7 = `SELECT * FROM users WHERE user_discord_uid = ? AND ${service_db_title} <> '0'  LIMIT 1;`;
@@ -369,6 +372,16 @@ module.exports = {
                                 };
 
                                 interaction.showModal(modal_vpn_common);
+                            } else if (['103'].includes(service_code) ) {
+                                var sql2 = `UPDATE users SET services_vpn_vless = '1' WHERE user_discord_uid = ?;`;
+                                database.query(sql2, [service_password, discord_user_uid], (error2, pingback) => {
+                                    if (error2){
+                                        BotLogChannel.send({ content: `[ADMIN] SERVICE: Can't add a service VLESS.vpn.snfx.ee (ID: 103) to user <@` + discord_user_uid + `>\n> Created by <@` + interaction.user.id + `>` });
+                                    } else {
+                                        NotificationsChannel.send({content:`— <@` + discord_user_uid + `>, добавил для Тебя новый сервис! Подробная информация — на странице Твоего профиля.`, components: [ButtonsRow1]});
+                                        BotLogChannel.send({ content: `[ADMIN] SERVICE: Added to user <@` + discord_user_uid + `> - VLESS.vpn.snfx.ee (ID: 103)\n> Created by <@` + interaction.user.id + `>` });
+                                    }
+                                });
                             } else {
                                 interaction.reply({ content: "— Не могу добавить эту услугу!", ephemeral: true });
                             }

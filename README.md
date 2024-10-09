@@ -110,6 +110,7 @@ Table users {
   user_invite_id integer
   services_vpn_us varchar(64) [default: `0`]
   services_vpn_ee varchar(64) [default: `0`]
+  services_vpn_vless varchar(64) [default: `0`]
   user_date_created timestamp [default: `CURRENT_TIMESTAMP`]
   user_date_updated timestamp [null]
   user_date_deleted timestamp [null]

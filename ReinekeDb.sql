@@ -11,6 +11,7 @@ CREATE TABLE `users` (
   `user_invite_id` integer,
   `services_vpn_us` varchar(64) NOT NULL DEFAULT ('0'),
   `services_vpn_ee` varchar(64) NOT NULL DEFAULT ('0'),
+  `services_vpn_vless` varchar(64) NOT NULL DEFAULT ('0'),
   `user_date_created` timestamp DEFAULT (CURRENT_TIMESTAMP),
   `user_date_updated` timestamp,
   `user_date_deleted` timestamp
