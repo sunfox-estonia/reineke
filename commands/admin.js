@@ -373,13 +373,24 @@ module.exports = {
 
                                 interaction.showModal(modal_vpn_common);
                             } else if (['103'].includes(service_code) ) {
-                                var sql2 = `UPDATE users SET services_vpn_vless = '1' WHERE user_discord_uid = ?;`;
-                                database.query(sql2, [service_password, discord_user_uid], (error2, pingback) => {
-                                    if (error2){
-                                        BotLogChannel.send({ content: `[ADMIN] SERVICE: Can't add a service VLESS.vpn.snfx.ee (ID: 103) to user <@` + discord_user_uid + `>\n> Created by <@` + interaction.user.id + `>` });
+                                var sql11 = `UPDATE users SET services_vpn_vless = "1" WHERE user_discord_uid = ?;`;
+                                database.query(sql11, [target_user.id], (error11, pingback) => {
+                                    if (error11){
+                                        BotLogChannel.send({ content: `[ADMIN] SERVICE: Can't add a service VLESS.vpn.snfx.ee (ID: 103) to user <@` + [target_user.id] + `>\n> Created by <@` + interaction.user.id + `>` });
                                     } else {
-                                        NotificationsChannel.send({content:`— <@` + discord_user_uid + `>, добавил для Тебя новый сервис! Подробная информация — на странице Твоего профиля.`, components: [ButtonsRow1]});
-                                        BotLogChannel.send({ content: `[ADMIN] SERVICE: Added to user <@` + discord_user_uid + `> - VLESS.vpn.snfx.ee (ID: 103)\n> Created by <@` + interaction.user.id + `>` });
+                                        let ProfileUri = config.url.commonUrl + "profile/";
+
+                                        var ProfileLinkBtn = new ButtonBuilder()
+                                        .setLabel('Посмотреть профиль')
+                                        .setURL(ProfileUri)
+                                        .setStyle(ButtonStyle.Link);
+
+                                        var ButtonsRow1 = new ActionRowBuilder()
+                                        .addComponents(ProfileLinkBtn);
+
+                                        NotificationsChannel.send({content:`— <@` + [target_user.id] + `>, добавил для Тебя новый сервис! Подробная информация — на странице Твоего профиля.`, components: [ButtonsRow1]});
+                                        BotLogChannel.send({ content: `[ADMIN] SERVICE: Added to user <@` + [target_user.id] + `> - VLESS.vpn.snfx.ee (ID: 103)\n> Created by <@` + interaction.user.id + `>` });
+                                        interaction.reply({ content: '— Добавил услугу указанному пользователю!', ephemeral: true });
                                     }
                                 });
                             } else {
