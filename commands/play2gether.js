@@ -152,7 +152,7 @@ async execute(interaction) {
             const locales = {
                 "en-US": 'To create an invite, select a Discord or Steam voice channel!',
             };
-            await interaction.reply(locales[interaction.locale] ?? 'Чтобы создать приглашение,выберите голосовой канал Discord или Steam!');
+            await interaction.reply(locales[interaction.locale] ?? 'Чтобы создать приглашение, выберите голосовой канал Discord или Steam!');
             return;
         } else if (steam_channel !== null) {
             const steam_channel = interaction.options.getString('steam_channel');

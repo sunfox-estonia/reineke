@@ -48,7 +48,7 @@ module.exports = {
         const timeFormat    = 'hh:mm';
         var timeCurrent     = moment();
         var timeLimitStart  = moment('11:30', timeFormat);
-        var timeLimitEnd    = moment('12:30', timeFormat);
+        var timeLimitEnd    = moment('13:30', timeFormat);
 
         if (timeCurrent.isBetween(timeLimitStart, timeLimitEnd)) {
             const Play2Channel  = client.channels.cache.get(config.log_channels.play2);
@@ -88,6 +88,18 @@ module.exports = {
             .setEmoji("<:ship_brig:1155489530900660294>")
             .setStyle(ButtonStyle.Secondary);
 
+            var Play2GameDarker = new ButtonBuilder()
+            .setLabel('🟧 Dark and Darker')
+            .setCustomId('play2_2016590')
+            .setEmoji("<:ico_steam:1246544322321715253>")
+            .setStyle(ButtonStyle.Secondary);
+
+            var Play2GameCS2 = new ButtonBuilder()
+            .setLabel('🟧 Counter-Strike 2')
+            .setCustomId('play2_730')
+            .setEmoji("<:ico_steam:1246544322321715253>")
+            .setStyle(ButtonStyle.Secondary);
+
             // var Play2ButtonValheim = new ButtonBuilder()
             // .setLabel('Sunfox Valheim')
             // .setURL('https://bifrost.snfx.ee/steam/892970/server/common')
@@ -96,8 +108,8 @@ module.exports = {
             var Play2SotRow = new ActionRowBuilder()
                 .addComponents(Play2ButtonSot1, Play2ButtonSot2, Play2ButtonSot3);
 
-            // var Play2SunfoxRow = new ActionRowBuilder()
-            //     .addComponents(Play2ButtonValheim);
+            var Play2GamesRow = new ActionRowBuilder()
+                .addComponents(Play2GameDarker, Play2GameCS2);
 
             var BadgesIntroEmbed = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)
@@ -121,7 +133,7 @@ module.exports = {
                 Play2Channel.bulkDelete(messages, true).then(messages => {
                     BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
                     Play2Channel.send({ embeds: [BadgesIntroEmbed], components: [BadgesButtonsRow] });
-                    Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2SotRow] });
+                    Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2SotRow, Play2GamesRow] });
                 }).catch(console.error);
             });
 
