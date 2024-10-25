@@ -43,13 +43,21 @@ module.exports = {
                     .setRequired(true)
                     .addChoices(...lists.games))
             .addChannelOption(option =>
-                option.setName('channel')
-                    .setDescription('Канал')
-                    .setRequired(true)
+                option.setName('discord_channel')
+                    .setDescription('Голосовой Discord')
+                    .setRequired(false)
                     .setDescriptionLocalizations({
-                        "en-US": 'Voice channel'
+                        "en-US": 'Discord channel'
                     })
                     .addChannelTypes(ChannelType.GuildVoice))
+            .addStringOption(option =>
+                option.setName('steam_channel')
+                    .setDescription('Голосовой Steam')
+                    .setRequired(false)
+                    .setDescriptionLocalizations({
+                        "en-US": 'Discord channel'
+                    })
+                    .addChoices(...lists.steam.channels.shortlist))
             .addStringOption(option =>
                 option.setName('time')
                     .setDescription('Старт сессии через...')
@@ -103,13 +111,21 @@ module.exports = {
                         { name: 'PVP - Хранители Сокровищ | Guardians of Fortune', value: 'pvp_guardians' },
                     ))
             .addChannelOption(option =>
-                option.setName('channel')
-                    .setDescription('Канал')
-                    .setRequired(true)
+                option.setName('discord_channel')
+                    .setDescription('Голосовой Discord')
+                    .setRequired(false)
                     .setDescriptionLocalizations({
-                        "en-US": 'Voice channel'
+                        "en-US": 'Discord channel'
                     })
                     .addChannelTypes(ChannelType.GuildVoice))
+            .addStringOption(option =>
+                option.setName('steam_channel')
+                    .setDescription('Голосовой Steam')
+                    .setRequired(false)
+                    .setDescriptionLocalizations({
+                        "en-US": 'Discord channel'
+                    })
+                    .addChoices(...lists.steam.channels.shortlist))
             .addStringOption(option =>
                 option.setName('time')
                     .setDescription('Старт сессии через...')
@@ -128,7 +144,41 @@ module.exports = {
 async execute(interaction) {
         const NotificationsChannel = interaction.client.channels.cache.get(config.log_channels.play2);
         const BotLogChannel = interaction.client.channels.cache.get(config.log_channels.log);
-        const party_channel = interaction.options.getChannel('channel');
+
+        const discord_channel = interaction.options.getChannel('discord_channel');
+        const steam_channel = interaction.options.getString('steam_channel');
+
+        if (discord_channel == null && steam_channel == null) {
+            const locales = {
+                "en-US": 'To create an invite, select a Discord or Steam voice channel!',
+            };
+            await interaction.reply(locales[interaction.locale] ?? 'Чтобы создать приглашение,выберите голосовой канал Discord или Steam!');
+            return;
+        } else if (steam_channel !== null) {
+            const steam_channel = interaction.options.getString('steam_channel');
+
+            const channelData = lists.steam.channels.longlist[steam_channel];
+
+            var ChannelLinkBtn = new ButtonBuilder()
+            .setLabel(channelData.name)
+            .setURL(channelData.url)
+            .setEmoji("<:ico_steam:1246544322321715253>")
+            .setStyle(ButtonStyle.Link);
+        } else if (discord_channel !== null) {
+            const discord_channel = interaction.options.getChannel('discord_channel');
+
+            let invite = await discord_channel.createInvite(
+            {
+                maxAge: 1200,
+                maxUses: 3
+            });
+
+            var ChannelLinkBtn = new ButtonBuilder()
+            .setLabel(discord_channel.name)
+            .setURL('https://discord.gg/' + invite.code)
+            .setStyle(ButtonStyle.Link);
+        }
+
         const party_time = interaction.options.getString('time');
         /*
          * SEA OF THIEVES play togeter invite
@@ -229,20 +279,15 @@ async execute(interaction) {
 								{ name: "Присоединяйся к рейду!", value: "Для участия в рейде Тебе потребуется **VPN** и **FleetCreator**. Участникам сообщества Sunfox.ee за пределами РФ бесплатно предоставляется безопасный VPN-сервис: обратись к Хранителям для получения более подробной информации." },
 								{ name: "Подготовка к рейду:", value: "Установить и настроить FleetCreator c помощью `/help fleetcreator`\n[Установить и настроить Sunfox.ee VPN](https://wiki.sunfox.ee/glitterbeard:vpn_eu) _или_\n[Установить и настроить WireGuard + FineVPN](https://wiki.sunfox.ee/glitterbeard:vpn_wireguard)" },
                                 { name: "Корабль:", value: text_ship_type },
-                                { name: "\u200b", value: "**Добавляйся в голосовой канал:**" },
-                                { name: "<#" + party_channel + ">", value: "\u200b" }
-							)
-							.setTimestamp()
-							.setFooter({
-								iconURL: config.ui.icon_url,
-								text: config.ui.title
-							});
+							);
 
-							NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, начинается сбор рейда:`, embeds: [invite_embed] }).then(repliedMessage => {
-										setTimeout(() => repliedMessage.delete(), 600000);
-									});
-							interaction.reply({ content: '— Приглашение на сбор рейда создано!', ephemeral: true });
-							BotLogChannel.send({ content: `[PLAY2] SOT RAID: <@` + DiscordUser.user.id + `> creates a **/play2gether** invite` });
+                        var ButtonsRow1 = new ActionRowBuilder().addComponents(ChannelLinkBtn);
+
+                        NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, начинается сбор рейда:`, embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
+                                    setTimeout(() => repliedMessage.delete(), 600000);
+                                });
+                        interaction.reply({ content: '— Приглашение на сбор рейда создано!', ephemeral: true });
+                        BotLogChannel.send({ content: `[PLAY2] SOT RAID: <@` + DiscordUser.user.id + `> creates a **/play2gether** invite` });
 
 					}else{
 						var invite_embed = new EmbedBuilder()
@@ -253,21 +298,16 @@ async execute(interaction) {
 							.addFields(
 								{ name: "Корабль:", value: text_ship_type },
 								{ name: "Миссия:", value: text_mission_description },
-								{ name: "\u200b", value: "**Добавляйся в голосовой канал:**" },
-								{ name: "<#" + party_channel + ">", value: "\u200b" }
-							)
-							.setTimestamp()
-							.setFooter({
-								iconURL: config.ui.icon_url,
-								text: config.ui.title
-							});
+							);
+
+                        var ButtonsRow1 = new ActionRowBuilder().addComponents(ChannelLinkBtn);
 						/*
 						* Get Steam profile to show achievements in PVP
 						*/
 						getSteam(interaction.member.user.id, function (error, dataset1) {
 							if (error) {
 								// If there is no Steam profile available
-								NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed] }).then(repliedMessage => {
+								NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
 									setTimeout(() => repliedMessage.delete(), 600000);
 								});
 								interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
@@ -308,7 +348,7 @@ async execute(interaction) {
 										}
 									}
 
-									NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed] }).then(repliedMessage => {
+									NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
 										setTimeout(() => repliedMessage.delete(), 600000);
 									});
 									interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
@@ -316,7 +356,7 @@ async execute(interaction) {
 
 								})
 								.catch(error => {
-                                    NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed] }).then(repliedMessage => {
+                                    NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
                                         setTimeout(() => repliedMessage.delete(), 600000);
                                     });
                                     interaction.reply({ content: '— Приглашение создано!', ephemeral: true });
@@ -350,8 +390,6 @@ async execute(interaction) {
                         // If there is no Steam profile available
 
                         steam.getGameDetails(steam_app_id).then(SteamApp => {
-
-
                             var invite_embed = new EmbedBuilder()
                                 .setColor(config.colors.primaryBright)
                                 .setAuthor({ name: DiscordUser.displayName + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: user_avatar })
@@ -360,16 +398,11 @@ async execute(interaction) {
                                 .setImage(SteamApp.header_image)
                                 .addFields(
                                     { name: "Присоединяйся к игре!", value: "Чтобы играть вместе, Тебе необходимо установить **"+SteamApp.name+"** на свой компьютер, а также добавить **" + DiscordUser.displayName + "** в список друзей Steam." },
-                                    { name: "\u200b", value: "**Добавляйся в голосовой канал:**" },
-                                    { name: "<#" + party_channel + ">", value: "\u200b" }
-                                )
-                                .setTimestamp()
-                                .setFooter({
-                                    iconURL: config.ui.icon_url,
-                                    text: config.ui.title
-                                });
+                                );
 
-                            NotificationsChannel.send({ embeds: [invite_embed] }).then(repliedMessage => {
+                            var ButtonsRow1 = new ActionRowBuilder().addComponents(ChannelLinkBtn);
+
+                            NotificationsChannel.send({ embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
                                 setTimeout(() => repliedMessage.delete(), 600000);
                             });
                             interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
@@ -405,14 +438,7 @@ async execute(interaction) {
                                     .setImage(SteamApp.header_image)
                                     .addFields(
                                         { name: "Присоединяйся к игре!", value: "Чтобы играть вместе, Тебе необходимо установить **"+SteamApp.name+"** на свой компьютер, а также добавить **" + DiscordUser.displayName + "** в список друзей Steam. Сделать это можно на странице по ссылке ниже." },
-                                        { name: "\u200b", value: "**Добавляйся в голосовой канал:**" },
-                                        { name: "<#" + party_channel + ">", value: "\u200b" }
-                                    )
-                                    .setTimestamp()
-                                    .setFooter({
-                                        iconURL: config.ui.icon_url,
-                                        text: config.ui.title
-                                    });
+                                    );
 
                                 /*
                                 * Get app connected achievements from DB
@@ -424,7 +450,7 @@ async execute(interaction) {
                                     .setStyle(ButtonStyle.Link);
 
                                 var ButtonsRow1 = new ActionRowBuilder()
-                                .addComponents(JoinLobbyBtn);
+                                .addComponents(JoinLobbyBtn, ChannelLinkBtn);
 
                                 NotificationsChannel.send({ embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
                                     setTimeout(() => repliedMessage.delete(), 600000);

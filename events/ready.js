@@ -71,19 +71,19 @@ module.exports = {
 
             // SoT Predefine buttons
             var Play2ButtonSot1 = new ButtonBuilder()
-            .setLabel('PVP - Слуги Пламени')
+            .setLabel('🟠 PVP - Слуги Пламени')
             .setCustomId('play2_sot1')
             .setEmoji("<:ship_brig:1155489530900660294>")
             .setStyle(ButtonStyle.Secondary);
 
             var Play2ButtonSot2 = new ButtonBuilder()
-            .setLabel('PVP - Открытый мир')
+            .setLabel('🟠 PVP - Открытый мир')
             .setCustomId('play2_sot2')
             .setEmoji("<:ship_sloop:1155489536349057095>")
             .setStyle(ButtonStyle.Secondary);
 
             var Play2ButtonSot3 = new ButtonBuilder()
-            .setLabel('Farm - Гильдия')
+            .setLabel('🟠 Farm - Гильдия')
             .setCustomId('play2_sot3')
             .setEmoji("<:ship_brig:1155489530900660294>")
             .setStyle(ButtonStyle.Secondary);
