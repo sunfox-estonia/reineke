@@ -24,6 +24,12 @@ module.exports = {
             const BotLogChannel = interaction.client.channels.cache.get(config.log_channels.log);
             const voice_channel = interaction.client.channels.cache.get(config.voice_channels.play2);
 
+            let invite = await voice_channel.createInvite(
+            {
+                maxAge: 1200,
+                maxUses: 3
+            });
+
             var text_ship_type = "Бригантина";
             var img_ship_type = "brig_";
             var text_mission_description = "Фарм - Гильдия";
@@ -43,14 +49,16 @@ module.exports = {
                     { name: "Миссия:", value: text_mission_description },
                     { name: "\u200b", value: "**Добавляйся в голосовой канал:**" },
                     { name: "<#" + voice_channel + ">", value: "\u200b" }
-                )
-                .setTimestamp()
-                .setFooter({
-                    iconURL: config.ui.icon_url,
-                    text: config.ui.title
-                });
+                );
 
-                NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed] }).then(repliedMessage => {
+                var ChannelLinkBtn = new ButtonBuilder()
+                .setLabel(discord_channel.name)
+                .setURL('https://discord.gg/' + invite.code)
+                .setStyle(ButtonStyle.Link);
+
+                var ButtonsRow1 = new ActionRowBuilder().addComponents(ChannelLinkBtn);
+
+                NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
                     setTimeout(() => repliedMessage.delete(), 600000);
                 });
                 interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });

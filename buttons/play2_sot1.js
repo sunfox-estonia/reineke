@@ -30,6 +30,12 @@ module.exports = {
             var text_mission_description = "PvP - Слуги Пламени";
             var img_ship_mission = img_ship_type + "pvp_servants";
 
+            let invite = await voice_channel.createInvite(
+            {
+                maxAge: 1200,
+                maxUses: 3
+            });
+
             await interaction.guild.members.fetch(interaction.member.user.id).then( DiscordUser => {
                 var time_to_go = moment().unix();
                 const user_avatar = (DiscordUser.user.avatar == null) ? config.ui.userpic : "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" ;
@@ -41,15 +47,15 @@ module.exports = {
                 .setThumbnail(config.url.resourcesUrl + "img/glitterbeard/" + img_ship_mission + ".png")
                 .addFields(
                     { name: "Корабль:", value: text_ship_type },
-                    { name: "Миссия:", value: text_mission_description },
-                    { name: "\u200b", value: "**Добавляйся в голосовой канал:**" },
-                    { name: "<#" + voice_channel + ">", value: "\u200b" }
-                )
-                .setTimestamp()
-                .setFooter({
-                    iconURL: config.ui.icon_url,
-                    text: config.ui.title
-                });
+                    { name: "Миссия:", value: text_mission_description }
+                );
+
+                var ChannelLinkBtn = new ButtonBuilder()
+                .setLabel(discord_channel.name)
+                .setURL('https://discord.gg/' + invite.code)
+                .setStyle(ButtonStyle.Link);
+
+                var ButtonsRow1 = new ActionRowBuilder().addComponents(ChannelLinkBtn);
 
                 /*
                 * Get Steam profile to show achievements in PVP
@@ -57,7 +63,7 @@ module.exports = {
                 getSteam(interaction.member.user.id, function (error, dataset1) {
                     if (error) {
                         // If there is no Steam profile available
-                        NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed] }).then(repliedMessage => {
+                        NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
                             setTimeout(() => repliedMessage.delete(), 600000);
                         });
                         interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
@@ -96,7 +102,7 @@ module.exports = {
                                 )
                             }
 
-                            NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed] }).then(repliedMessage => {
+                            NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
                                 setTimeout(() => repliedMessage.delete(), 600000);
                             });
                             interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
@@ -104,7 +110,7 @@ module.exports = {
 
                         })
                         .catch(error => {
-                            NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed] }).then(repliedMessage => {
+                            NotificationsChannel.send({ content: `<@&` + config.roles.community.glitterbeard + `>, присоединяйтесь к путешествию:`, embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
                                 setTimeout(() => repliedMessage.delete(), 600000);
                             });
                             interaction.reply({ content: '— Приглашение создано!', ephemeral: true });

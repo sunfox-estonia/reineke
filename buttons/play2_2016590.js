@@ -52,7 +52,7 @@ module.exports = {
 
                     var ButtonsRow1 = new ActionRowBuilder().addComponents(ChannelLinkBtn);
 
-                    NotificationsChannel.send({ embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
+                    NotificationsChannel.send({content: `<@&` + config.roles.community.darker + `>, вас ждут подземелья:`, embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
                         setTimeout(() => repliedMessage.delete(), 600000);
                     });
                     interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
