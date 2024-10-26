@@ -46,13 +46,11 @@ module.exports = {
                 .setThumbnail(config.url.resourcesUrl + "img/glitterbeard/" + img_ship_mission + ".png")
                 .addFields(
                     { name: "Корабль:", value: text_ship_type },
-                    { name: "Миссия:", value: text_mission_description },
-                    { name: "\u200b", value: "**Добавляйся в голосовой канал:**" },
-                    { name: "<#" + voice_channel + ">", value: "\u200b" }
+                    { name: "Миссия:", value: text_mission_description }
                 );
 
                 var ChannelLinkBtn = new ButtonBuilder()
-                .setLabel(discord_channel.name)
+                .setLabel(voice_channel.name)
                 .setURL('https://discord.gg/' + invite.code)
                 .setStyle(ButtonStyle.Link);
 

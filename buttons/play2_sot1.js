@@ -51,7 +51,7 @@ module.exports = {
                 );
 
                 var ChannelLinkBtn = new ButtonBuilder()
-                .setLabel(discord_channel.name)
+                .setLabel(voice_channel.name)
                 .setURL('https://discord.gg/' + invite.code)
                 .setStyle(ButtonStyle.Link);
 
