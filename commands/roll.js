@@ -8,12 +8,13 @@ module.exports = {
 		.setDescription('Кинуть выбранный дайс.')
 		.addStringOption(option =>
 			option.setName('dice_type')
-				.setDescription('Тип дайса (d4, d6, d8, d12, d20)')
+				.setDescription('Тип дайса (d4, d6, d8б d10, d12, d20)')
 				.setRequired(false)
 				.addChoices(
 					{ name: 'd4', value: 'd4' },
 					{ name: 'd6', value: 'd6' },
 					{ name: 'd8', value: 'd8' },
+					{ name: 'd10', value: 'd10' },
 					{ name: 'd12', value: 'd12'},
 					{ name: 'd20', value: 'd20'}
 				))
