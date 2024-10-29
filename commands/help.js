@@ -21,8 +21,8 @@ module.exports = {
     )
 	.addSubcommand(subcommand =>
 		subcommand
-			.setName('invite')
-			.setDescription('Создание приглашения на сервер | Create an invitation to the server')
+			.setName('roll')
+			.setDescription('Панель для бросков кубов | Roll a dice panel')
     ),
 
     async execute(interaction) {
@@ -82,22 +82,56 @@ module.exports = {
             });
 
             interaction.reply({ embeds: [HelpFleetcreator], components: [Help2MeRow],  ephemeral: true });
-        } else if (interaction.options.getSubcommand() === 'invite') {
+        } else if (interaction.options.getSubcommand() === 'roll') {
+
+            var Dice4Button = new ButtonBuilder()
+            .setLabel('d4')
+            .setCustomId('roll_d4')
+            .setEmoji("<:dice_d4:1300778241010696202>")
+            .setStyle(ButtonStyle.Secondary);
+
+            var Dice6Button = new ButtonBuilder()
+            .setLabel('d6')
+            .setCustomId('roll_d6')
+            .setEmoji("<:dice_d6:1300778243259105351>")
+            .setStyle(ButtonStyle.Secondary);
+
+            var Dice8Button = new ButtonBuilder()
+            .setLabel('d8')
+            .setCustomId('roll_d8')
+            .setEmoji("<:dice_d8:1300778245020581908>")
+            .setStyle(ButtonStyle.Secondary);
+
+            var Dice10Button = new ButtonBuilder()
+            .setLabel('d10')
+            .setCustomId('roll_d10')
+            .setEmoji("<:dice_d10:1300778246413226026>")
+            .setStyle(ButtonStyle.Secondary);
+
+            var Dice12Button = new ButtonBuilder()
+            .setLabel('d12')
+            .setCustomId('roll_d12')
+            .setEmoji("<:dice_d12:1300778248225161216>")
+            .setStyle(ButtonStyle.Secondary);
+
+            var Dice20Button = new ButtonBuilder()
+            .setLabel('d20')
+            .setCustomId('roll_d20')
+            .setEmoji("<:dice_d20:1300778249693167658>")
+            .setStyle(ButtonStyle.Secondary);
+
+            var Help2RollRow1 = new ActionRowBuilder()
+                .addComponents(Dice4Button, Dice6Button, Dice8Button, Dice10Button);
+
+            var Help2RollRow2 = new ActionRowBuilder()
+                .addComponents(Dice12Button, Dice20Button);
+
             var HelpInvite = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)
-                .setTitle( "Создание ссылки приглашения на сервер." )
-                .setDescription("")
-                .setImage(config.url.resourcesUrl + "/help/invite.gif")
-            .addFields(
-                { name: "/invite", value: "" },
-                { name: "\u200b", value: "Используй команду в любом доступном канале `/invite` как показано ниже." },
-            )
-            .setFooter({
-                iconURL: config.ui.icon_url,
-                text: config.ui.title
-            });
+                .setTitle( "— Бросим кубы!" )
+                .setDescription("Чтобы бросить кубик (дайс), нажми на одну из кнопок ниже. Сообщение с результатом броска удалится автоматически через 30 секунд.");
 
-            interaction.reply({ embeds: [HelpInvite], ephemeral: true });
+            interaction.reply({ embeds: [HelpInvite], components: [Help2RollRow1, Help2RollRow2]});
 
         }
     }
