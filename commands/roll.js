@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Roll20 = require('d20');
+const lists = require('../config.lists.json');
 const config = require('../config.json');
 
 module.exports = {
@@ -35,7 +36,6 @@ module.exports = {
 		interaction.reply({content: `<@` + interaction.user.id + `> ` + randomAction + ` ` +  data_dice + `...`, files: [config.url.resourcesUrl + "img/dice/"+ img], ephemeral: data_hide  });
 	},
 };
-
 
 function getRandomAction() {
     const actions = lists.dice_action;
