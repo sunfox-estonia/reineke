@@ -87,44 +87,50 @@ module.exports = {
             var Dice4Button = new ButtonBuilder()
             .setLabel('d4')
             .setCustomId('roll_d4')
-            .setEmoji("<:dice_d4:1300778241010696202>")
+            .setEmoji("<:dice_d4:1300837798085136404>")
             .setStyle(ButtonStyle.Secondary);
 
             var Dice6Button = new ButtonBuilder()
             .setLabel('d6')
             .setCustomId('roll_d6')
-            .setEmoji("<:dice_d6:1300778243259105351>")
+            .setEmoji("<:dice_d6:1300837800186216560>")
             .setStyle(ButtonStyle.Secondary);
 
             var Dice8Button = new ButtonBuilder()
             .setLabel('d8')
             .setCustomId('roll_d8')
-            .setEmoji("<:dice_d8:1300778245020581908>")
+            .setEmoji("<:dice_d8:1300837801910337668>")
             .setStyle(ButtonStyle.Secondary);
 
             var Dice10Button = new ButtonBuilder()
             .setLabel('d10')
             .setCustomId('roll_d10')
-            .setEmoji("<:dice_d10:1300778246413226026>")
+            .setEmoji("<:dice_d10:1300837802925359116>")
             .setStyle(ButtonStyle.Secondary);
 
             var Dice12Button = new ButtonBuilder()
             .setLabel('d12')
             .setCustomId('roll_d12')
-            .setEmoji("<:dice_d12:1300778248225161216>")
+            .setEmoji("<:dice_d12:1300837804695224435>")
             .setStyle(ButtonStyle.Secondary);
 
             var Dice20Button = new ButtonBuilder()
             .setLabel('d20')
             .setCustomId('roll_d20')
-            .setEmoji("<:dice_d20:1300778249693167658>")
+            .setEmoji("<:dice_d20:1300837806024822824>")
+            .setStyle(ButtonStyle.Secondary);
+
+            var CardButton = new ButtonBuilder()
+            .setLabel('card')
+            .setCustomId('take_сard')
+            .setEmoji("<:roll_card:1301645077562789918>")
             .setStyle(ButtonStyle.Secondary);
 
             var Help2RollRow1 = new ActionRowBuilder()
                 .addComponents(Dice4Button, Dice6Button, Dice8Button, Dice10Button);
 
             var Help2RollRow2 = new ActionRowBuilder()
-                .addComponents(Dice12Button, Dice20Button);
+                .addComponents(Dice12Button, Dice20Button, CardButton);
 
             var HelpInvite = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)

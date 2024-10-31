@@ -29,6 +29,17 @@ module.exports = {
 		let p = data_dice.match(/(\d{0,1})[d](\d{1,2})/g);
 		result = Roll20.verboseRoll(p[0]);
 		var img =  data_dice + '-' + result + '.png';
-		interaction.reply({files: [config.url.resourcesUrl + "img/dice/"+ img], ephemeral: data_hide  });
+
+        let randomAction = getRandomAction();
+
+		interaction.reply({content: `<@` + interaction.user.id + `> ` + randomAction + ` ` +  data_dice + `...`, files: [config.url.resourcesUrl + "img/dice/"+ img], ephemeral: data_hide  });
 	},
 };
+
+
+function getRandomAction() {
+    const actions = lists.dice_action;
+    const randomIndex = Math.floor(Math.random() * actions.length);
+    return actions[randomIndex];
+}
+
