@@ -135,7 +135,7 @@ module.exports = {
             var HelpInvite = new EmbedBuilder()
                 .setColor(config.colors.primaryDark)
                 .setTitle( "— Бросим кубы!" )
-                .setDescription("Чтобы бросить кубик (дайс), нажми на одну из кнопок ниже. Сообщение с результатом броска удалится автоматически через 30 секунд.");
+                .setDescription("Чтобы бросить кубик или достать случайную карту, нажми на одну из кнопок ниже. Сообщение с результатом броска удалится автоматически через 30 секунд.");
 
             interaction.reply({ embeds: [HelpInvite], components: [Help2RollRow1, Help2RollRow2]});
 
