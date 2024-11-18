@@ -22,8 +22,9 @@ module.exports = {
                 .setDescription('Страница с правилами сервера')
                 .setRequired(false)
                 .addChoices(
-                    { name: 'Glitterbeard Sailors', value: 'glitterbeard' },
-                    { name: 'Virumaa Viikingid', value: 'viruviking' }
+                    { name: 'Darker Boost Service', value: 'darker' },
+                    { name: 'Virumaa Viikingid', value: 'viruviking' },
+                    { name: 'Glitterbeard Sailors', value: 'glitterbeard' }
                 )),
 
     async execute(interaction) {
@@ -44,6 +45,9 @@ module.exports = {
                 break;
             case 'viruviking':
                 var landingUrl = config.url.landingUrl + 'vv' + '/';
+                break;
+            case 'darker':
+                var landingUrl = config.url.landingUrl + 'dd' + '/';
                 break;
             default:
                 var landingUrl = config.url.landingUrl;
