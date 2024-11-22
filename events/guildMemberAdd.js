@@ -1,4 +1,4 @@
-const { Events, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
+const { Events, ButtonBuilder, ActionRowBuilder, ButtonStyle, PermissionFlagsBits } = require('discord.js');
 const config = require('../config.json');
 const mysql = require('mysql');
 const database = mysql.createConnection({
@@ -14,7 +14,7 @@ module.exports = {
     name: Events.GuildMemberAdd,
     async execute(member) {
         const BotLogChannel = member.client.channels.cache.get(config.log_channels.log);
-        const DarkerCategoryId = config.log_channels.roles.categories.darker;
+        const DarkerCategoryId = config.roles.categories.darker;
 
         /* Step 1.
         *  Select member data out from the
@@ -37,12 +37,19 @@ module.exports = {
                 *  regarding the user_data.user_landing value
                 *  Add default role.
                 */
+                BotLogChannel.send({ content: `[INVITE] JOIN: User <@${member.user.id}> joined to the server.` });
+
                 for (var key in config.roles.community) {
-                    if (key === user_data.user_landing && user_data.user_landing != 'darker') {
+                    if (key === user_data.user_landing && key != 'darker') {
+
                         console.log("User is: " + key);
+                        member.setNickname(user_data.user_name);
                         var communityRole = config.roles.community[key];
                         member.roles.add([config.roles.level.newbie, communityRole]);
-                    } else if (user_data.user_landing === 'darker') {
+                        BotLogChannel.send({ content: `[INVITE] JOIN: Default roles are assigned to user <@${member.user.id}>.` });
+
+                    } else if (key === user_data.user_landing && key == 'darker') {
+
                         /* Darker Level Boost service
                          * Here is the code for the personal channel creation and user account data getting.
                          */
@@ -102,30 +109,34 @@ module.exports = {
                         var ButtonsRow2 = new ActionRowBuilder()
                         .addComponents(DarkerClericBtn, DarkerBardBtn, DarkerWarlockBtn, DarkerDruidBtn);
 
-                        let PersonalChannelName = member.user.username;
-                        member.guild.channels.create(PersonalChannelName)
-                            .then(channel => {
-                                channel.setParent(DarkerCategoryId);
-                                channel.send({ content: `Dear <@${member.user.id}>.\r\nWelcome to your personal channel! Thank you for choosing our services. To get started, please select the class of your character by clicking one of the buttons below.\r\nIf you have any questions, feel free to ask—we’re here to make your experience smooth and enjoyable!\r\nLet’s begin your journey to success!`, components: [ButtonsRow1, ButtonsRow2]});
-                            })
-                            .catch(err => {
-                                console.log(err)
-                            });
+                        var PersonalChannelName = member.user.username;
+
+                        member.guild.channels.create({
+                            name: PersonalChannelName,
+                            type: 0
+                        })
+                        .then(ticket => {
+                            ticket.setParent(DarkerCategoryId);
+                            ticket.permissionOverwrites.set([
+                                {
+                                    id: member.user.id,
+                                    allow: [
+                                        PermissionFlagsBits.ViewChannel,
+                                        PermissionFlagsBits.SendMessages,
+                                        PermissionFlagsBits.ReadMessageHistory,
+                                        PermissionFlagsBits.AttachFiles,
+                                        PermissionFlagsBits.AddReactions,
+                                    ],
+                                },
+                            ]);
+                            ticket.send({ content: `Dear <@${member.user.id}>.\r\nThank you for choosing our services. Here is your personal channel. To get started, please select the class of your character by clicking one of the buttons below.\r\nIf you have any questions, feel free to ask — we’re here to make your experience smooth and enjoyable!\r\nLet’s begin your journey to success!`, components: [ButtonsRow1, ButtonsRow2]});
+                            BotLogChannel.send({ content: `[INVITE] JOIN: Personal channel for user <@${member.user.id}> is created.` });
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        });
                     }
                 }
-
-                /* Step 4
-                *  Set user nickname to user_data.user_name
-                */
-                if (user_data.user_name && user_data.user_landing != 'darker') {
-                    member.setNickname(user_data.user_name);
-                }
-
-                BotLogChannel.send({ content: `[INVITE] JOIN: User <@${member.user.id}> joined to the server. Default roles is assigned.` });
-                if (user_data.user_landing === 'darker') {
-                    BotLogChannel.send({ content: `[INVITE] JOIN: Personal channel for user <@${member.user.id}> is created.` });
-                }
-                return;
             }
         });
     },

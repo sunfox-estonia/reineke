@@ -15,6 +15,8 @@ const database = mysql.createConnection({
 const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildInvites,
+        GatewayIntentBits.GuildVoiceStates,
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.MessageContent,
 		GatewayIntentBits.GuildMembers,
