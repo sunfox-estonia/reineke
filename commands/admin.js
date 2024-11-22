@@ -147,7 +147,7 @@ module.exports = {
                                             interaction.reply({ content: '— Возникла ошибка при подсчете pp!', ephemeral: true });
                                         } else {
                                             var total_pp = JSON.parse(JSON.stringify(dataset2));
-                                            BotLogChannel.send({ content: `[ADMIN] BADGES: Added to user <@` + DiscordUser.user.id + `> - (` + achievement_data.comedation_code + `) ` + achievement_data.comedation_title + `\nUser user PowerPoints sum: ` + total_pp + `\n`+ `Created by <@` + interaction.user.id + `>` });
+                                            BotLogChannel.send({ content: `[ADMIN] BADGES: Added to user <@` + DiscordUser.user.id + `> - (` + achievement_data.comedation_code + `) ` + achievement_data.comedation_title + `\n> User user PowerPoints sum: ` + total_pp + `\n> `+ `Created by <@` + interaction.user.id + `>` });
                                         }
                                     });
 
@@ -226,7 +226,7 @@ module.exports = {
                         database.query(sql6, [DiscordUser.user.id, gift, giftData.title, giftData.description, key], (error, pingback) => {
                             if (error) {
                                 interaction.reply({ content: "Ошибка при добавлении подарка в базу данных.", ephemeral: true });
-                                BotLogChannel.send({ content: `[ADMIN] GIFTS: Can't add gift (code: ` + gift + `) for user <@` + DiscordUser.user.id + `> to database. Created by: <@` + interaction.user.id + `>` });
+                                BotLogChannel.send({ content: `[ADMIN] GIFTS: Can't add gift (code: ` + gift + `) for user <@` + DiscordUser.user.id + `> to database.\n> Created by: <@` + interaction.user.id + `>` });
                                 return;
                             } else {
                                 let embed_username = DiscordUser.nickname ?? DiscordUser.user.username;
