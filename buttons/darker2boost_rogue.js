@@ -4,11 +4,11 @@ const lists = require('../config.lists.json');
 
 module.exports = {
     data: {
-        name: 'darker2boost_fighter'
+        name: 'darker2boost_rugue'
     },
     async execute(interaction) {
         const modal_order_details = {
-            "title": `Add order for: Fighter`,
+            "title": `Add order for: Rugue`,
             "custom_id": "darker_client_request",
             "components": [
                 {
@@ -20,7 +20,7 @@ module.exports = {
                         "style": 1,
                         "min_length": 1,
                         "max_length": 64,
-                        "value": "Fighter",
+                        "value": "Rogue",
                         "required": true
                     }]
                 },
