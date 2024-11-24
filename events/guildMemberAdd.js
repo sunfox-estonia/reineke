@@ -119,6 +119,12 @@ module.exports = {
                             ticket.setParent(DarkerCategoryId);
                             ticket.permissionOverwrites.set([
                                 {
+                                    id: member.guild.roles.everyone,
+                                    deny: [
+                                        PermissionFlagsBits.ViewChannel,
+                                    ],
+                                },
+                                {
                                     id: member.user.id,
                                     allow: [
                                         PermissionFlagsBits.ViewChannel,
@@ -128,6 +134,17 @@ module.exports = {
                                         PermissionFlagsBits.AddReactions,
                                     ],
                                 },
+                                {
+                                    id: member.guild.roles.cache.get(config.roles.level.admin),
+                                    allow: [
+                                        PermissionFlagsBits.ViewChannel,
+                                        PermissionFlagsBits.SendMessages,
+                                        PermissionFlagsBits.ReadMessageHistory,
+                                        PermissionFlagsBits.AttachFiles,
+                                        PermissionFlagsBits.AddReactions,
+                                        PermissionFlagsBits.ManageMessages
+                                ],
+                                }
                             ]);
                             ticket.send({ content: `Dear <@${member.user.id}>.\r\nThank you for choosing our services. Here is your personal channel. To get started, please select the class of your character by clicking one of the buttons below.\r\nIf you have any questions, feel free to ask — we’re here to make your experience smooth and enjoyable!\r\nLet’s begin your journey to success!`, components: [ButtonsRow1, ButtonsRow2]});
                             BotLogChannel.send({ content: `[INVITE] JOIN: Personal channel for user <@${member.user.id}> is created.` });
