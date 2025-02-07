@@ -162,39 +162,39 @@ module.exports = {
                                             */
                                             var user_rare_comedations = JSON.parse(JSON.stringify(dataset2));
 
-                                            var canvas = createCanvas(800, 295);
-                                            if (user_rare_comedations.length > 2) {
-                                                canvas = createCanvas(800, 600);
-                                            }
+                                            var canvas = createCanvas(620, 450);
                                             const ctx = canvas.getContext('2d');
                                             const profile_comedations_filename = 'p_c_' + DiscordUser.user.id + '.png';
 
-
                                             var img1 = user_rare_comedations[0].comedation_code + "_profile.png";
-                                            var img2 = user_rare_comedations.length > 1 ? user_rare_comedations[1].comedation_code + "_profile.png" : "placeholder.png";
-                                            var img3 = user_rare_comedations.length > 2 ? user_rare_comedations[2].comedation_code + "_profile.png" : "placeholder.png";
-                                            var img4 = user_rare_comedations.length > 3 ? user_rare_comedations[3].comedation_code + "_profile.png" : "placeholder.png";
+
+                                            if (user_rare_comedations.length == 1) {
+                                                var img2 = "null _" + getAchievementEmpty() + "_profile.png";
+                                                var img3 = "placeholder.png";
+                                            } else if (user_rare_comedations.length == 2) {
+                                                var img2 = user_rare_comedations[1].comedation_code + "_profile.png";
+                                                var img3 = "null _" + getAchievementEmpty() + "_profile.png";
+                                            } else if (user_rare_comedations.length == 3) {
+                                                var img2 = user_rare_comedations[1].comedation_code + "_profile.png";
+                                                var img3 = user_rare_comedations[2].comedation_code + "_profile.png";
+                                            }
 
                                             var img1_url = config.url.resourcesUrl + "img/comedations/" + img1;
                                             var img2_url = config.url.resourcesUrl + "img/comedations/" + img2;
                                             var img3_url = config.url.resourcesUrl + "img/comedations/" + img3;
-                                            var img4_url = config.url.resourcesUrl + "img/comedations/" + img4;
 
                                             loadImage(img1_url).then((image) => {
-                                                ctx.drawImage(image, 0, 0, 395, 295);
+                                                ctx.drawImage(image, 0, 0, 200, 450);
                                                 loadImage(img2_url).then((image) => {
-                                                    ctx.drawImage(image, 405, 0, 395, 295);
+                                                    ctx.drawImage(image, 210, 0, 410, 450);
                                                     loadImage(img3_url).then((image) => {
-                                                        ctx.drawImage(image, 0, 305, 395, 295);
-                                                        loadImage(img4_url).then((image) => {
-                                                            ctx.drawImage(image, 405, 305, 395, 295);
-                                                            var out = fs.createWriteStream(config.buffer.images.path + profile_comedations_filename);
-                                                            var stream = canvas.createPNGStream();
-                                                            stream.pipe(out);
-                                                            out.on('finish', () => {
-                                                                interaction.reply({ content: '— Добавил достижение указанному пользователю!', ephemeral: true });
-                                                            });
-                                                        })
+                                                        ctx.drawImage(image, 420, 0, 620, 450);
+                                                        var out = fs.createWriteStream(config.buffer.images.path + profile_comedations_filename);
+                                                        var stream = canvas.createPNGStream();
+                                                        stream.pipe(out);
+                                                        out.on('finish', () => {
+                                                            interaction.reply({ content: '— Добавил достижение указанному пользователю!', ephemeral: true });
+                                                        });
                                                     })
                                                 })
                                             });
@@ -536,4 +536,11 @@ updateUserRareComedations = function (UserDiscordUid, callback) {
         }
     });
 // getUserRareComedations ended
+}
+
+function getAchievementEmptyNumber() {
+    const array = [0, 1, 2, 3];
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
+// getAchievementEmptyNumber
 }

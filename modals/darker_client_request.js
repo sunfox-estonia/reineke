@@ -14,6 +14,7 @@ module.exports = {
         const OrderDetailsEmbed = new EmbedBuilder()
             .setColor(config.colors.primaryBright)
             .setTitle("Order details")
+            .setThumbnail(config.url.darker.classUrl + `classicon_` + data_order_character.toLowerCase() + `.webp`)
             .setDescription(data_order_details + `\n\n`)
             .addFields(
                 { name: "Character:", value: data_order_character, inline: true},
