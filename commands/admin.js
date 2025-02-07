@@ -169,11 +169,11 @@ module.exports = {
                                             var img1 = user_rare_comedations[0].comedation_code + "_profile.png";
 
                                             if (user_rare_comedations.length == 1) {
-                                                var img2 = "null _" + getAchievementEmpty() + "_profile.png";
+                                                var img2 = "null_" + getAchievementEmptyNumber() + "_profile.png";
                                                 var img3 = "placeholder.png";
                                             } else if (user_rare_comedations.length == 2) {
                                                 var img2 = user_rare_comedations[1].comedation_code + "_profile.png";
-                                                var img3 = "null _" + getAchievementEmpty() + "_profile.png";
+                                                var img3 = "null_" + getAchievementEmptyNumber() + "_profile.png";
                                             } else if (user_rare_comedations.length == 3) {
                                                 var img2 = user_rare_comedations[1].comedation_code + "_profile.png";
                                                 var img3 = user_rare_comedations[2].comedation_code + "_profile.png";
@@ -186,9 +186,9 @@ module.exports = {
                                             loadImage(img1_url).then((image) => {
                                                 ctx.drawImage(image, 0, 0, 200, 450);
                                                 loadImage(img2_url).then((image) => {
-                                                    ctx.drawImage(image, 210, 0, 410, 450);
+                                                    ctx.drawImage(image, 210, 0, 200, 450);
                                                     loadImage(img3_url).then((image) => {
-                                                        ctx.drawImage(image, 420, 0, 620, 450);
+                                                        ctx.drawImage(image, 420, 0, 200, 450);
                                                         var out = fs.createWriteStream(config.buffer.images.path + profile_comedations_filename);
                                                         var stream = canvas.createPNGStream();
                                                         stream.pipe(out);
