@@ -88,10 +88,9 @@ module.exports = {
             .setEmoji("<:ship_brig:1155489530900660294>")
             .setStyle(ButtonStyle.Secondary);
 
-            var Play2GameDarker = new ButtonBuilder()
-            .setLabel('🟧 Dark and Darker')
-            .setCustomId('play2_2016590')
-            .setEmoji("<:ico_steam:1246544322321715253>")
+            var Play2GameDRG = new ButtonBuilder()
+            .setLabel('🟠 Deep Rock Galactic')
+            .setCustomId('play2_548430')
             .setStyle(ButtonStyle.Secondary);
 
             var Play2GameCS2 = new ButtonBuilder()
@@ -109,22 +108,7 @@ module.exports = {
                 .addComponents(Play2ButtonSot1, Play2ButtonSot2, Play2ButtonSot3);
 
             var Play2GamesRow = new ActionRowBuilder()
-                .addComponents(Play2GameDarker, Play2GameCS2);
-
-            var BadgesIntroEmbed = new EmbedBuilder()
-                .setColor(config.colors.primaryDark)
-                .setTitle( "— Эй, тут задание для тебя!" )
-                .setDescription(`А ты знаешь, как называется наша таверна? Сытый Дракон! Однажды голодный и злой дракон пришел в эти края, а медведь Брюн утихомирил его, напоив свежим элем и накормив сочным мясом. Обитатели Леса любят медведя за этот славный поступок!\n\nКстати, у меня есть пара заданий специально для тебя. Посмотри их на странице профиля [sunfox.ee/profile](https://sunfox.ee/profile), а как выполнишь, обязательно расскажи об этом всем нам!`);
-
-            let ProfileUri = config.url.commonUrl + "profile/";
-
-            var BadgeProfileLink = new ButtonBuilder()
-            .setLabel('Посмотреть достижения')
-            .setURL(ProfileUri)
-            .setStyle(ButtonStyle.Link);
-
-            var BadgesButtonsRow = new ActionRowBuilder()
-            .addComponents(BadgeProfileLink);
+                .addComponents(Play2GameDRG, Play2GameCS2);
 
             if (!Play2Channel) {
                 BotLogChannel.send({ content: `[PLAY2] ERROR: Invites channel not found!` });
@@ -132,7 +116,6 @@ module.exports = {
             Play2Channel.messages.fetch({ limit: 99 }).then(messages => {
                 Play2Channel.bulkDelete(messages, true).then(messages => {
                     BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
-                    Play2Channel.send({ embeds: [BadgesIntroEmbed], components: [BadgesButtonsRow] });
                     Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2SotRow, Play2GamesRow] });
                 }).catch(console.error);
             });

@@ -16,7 +16,7 @@ const steam = new SteamAPI(config.api.steam.token);
 
 module.exports = {
     data: {
-        name: 'play2_2016590'
+        name: 'play2_548430'
     },
     async execute(interaction) {
         // SOT-specific role check
@@ -24,10 +24,17 @@ module.exports = {
         if (hasRole == true) {
             const NotificationsChannel = interaction.client.channels.cache.get(config.log_channels.play2);
             const BotLogChannel = interaction.client.channels.cache.get(config.log_channels.log);
+            const voice_channel = interaction.client.channels.cache.get(config.voice_channels.play2);
+
+            let invite = await voice_channel.createInvite(
+            {
+                maxAge: 1200,
+                maxUses: 100
+            });
 
             await interaction.guild.members.fetch(interaction.member.user.id).then( DiscordUser => {
                 const time_to_go = moment().unix();
-                const steam_app_id = '2016590';
+                const steam_app_id = '548430';
                 const user_avatar = (DiscordUser.user.avatar == null) ? config.ui.userpic : "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" ;
 
                 steam.getGameDetails(steam_app_id).then(SteamApp => {
@@ -41,18 +48,14 @@ module.exports = {
                             { name: "Присоединяйся к игре!", value: "Чтобы играть вместе, Тебе необходимо установить **"+SteamApp.name+"** на свой компьютер, а также добавить **" + DiscordUser.displayName + "** в список друзей Steam." },
                         );
 
-                    const firstKey = Object.keys(lists.steam.channels.longlist)[0];
-                    const channelData = lists.steam.channels.longlist[firstKey];
-
                     var ChannelLinkBtn = new ButtonBuilder()
-                        .setLabel(channelData.name)
-                        .setURL(channelData.url)
-                        .setEmoji("<:ico_steam:1246544322321715253>")
-                        .setStyle(ButtonStyle.Link);
+                    .setLabel(voice_channel.name)
+                    .setURL('https://discord.gg/' + invite.code)
+                    .setStyle(ButtonStyle.Link);
 
                     var ButtonsRow1 = new ActionRowBuilder().addComponents(ChannelLinkBtn);
 
-                    NotificationsChannel.send({content: `<@&` + config.roles.community.darker + `>, вас ждут подземелья:`, embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
+                    NotificationsChannel.send({embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
                         setTimeout(() => repliedMessage.delete(), 600000);
                     });
                     interaction.reply({ content: '— Приглашение успешно создано!', ephemeral: true });
