@@ -361,7 +361,7 @@ async execute(interaction) {
                                     });
                                     interaction.reply({ content: '— Приглашение создано!', ephemeral: true });
 
-                                    BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> has been created a **/play2gether** invite, but Steam achievements has not been fetched.`});
+                                    BotLogChannel.send({ content: `[PLAY2] SOT: <@` + DiscordUser.user.id + `> created a **/play2gether** invite, but Steam achievements has not been fetched.`});
 								});
 							}
 						});

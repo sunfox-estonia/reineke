@@ -38,6 +38,7 @@ module.exports = {
                 const user_avatar = (DiscordUser.user.avatar == null) ? config.ui.userpic : "https://cdn.discordapp.com/avatars/" + DiscordUser.user.id + "/" + DiscordUser.user.avatar + ".jpeg" ;
 
                 steam.getGameDetails(steam_app_id).then(SteamApp => {
+                    const BifrostUri = 'https://bifrost.snfx.ee/steam/'+SteamApp.steam_appid+'/'+SteamUser.steamID;
                     var invite_embed = new EmbedBuilder()
                         .setColor(config.colors.primaryBright)
                         .setAuthor({ name: DiscordUser.displayName + " приглашает поиграть\nв "+SteamApp.name+".", iconURL: user_avatar })
@@ -48,12 +49,18 @@ module.exports = {
                             { name: "Присоединяйся к игре!", value: "Чтобы играть вместе, Тебе необходимо установить **"+SteamApp.name+"** на свой компьютер, а также добавить **" + DiscordUser.displayName + "** в список друзей Steam." },
                         );
 
+                    var JoinLobbyBtn = new ButtonBuilder()
+                    .setLabel('Присоединиться к лобби')
+                    .setURL(BifrostUri)
+                    .setStyle(ButtonStyle.Link);
+
                     var ChannelLinkBtn = new ButtonBuilder()
                     .setLabel(voice_channel.name)
                     .setURL('https://discord.gg/' + invite.code)
                     .setStyle(ButtonStyle.Link);
 
-                    var ButtonsRow1 = new ActionRowBuilder().addComponents(ChannelLinkBtn);
+                    var ButtonsRow1 = new ActionRowBuilder()
+                        .addComponents(JoinLobbyBtn, ChannelLinkBtn);
 
                     NotificationsChannel.send({embeds: [invite_embed], components: [ButtonsRow1] }).then(repliedMessage => {
                         setTimeout(() => repliedMessage.delete(), 600000);
