@@ -99,10 +99,10 @@ module.exports = {
             .setEmoji("<:ico_steam:1246544322321715253>")
             .setStyle(ButtonStyle.Secondary);
 
-            // var Play2ButtonValheim = new ButtonBuilder()
-            // .setLabel('Sunfox Valheim')
-            // .setURL('https://bifrost.snfx.ee/steam/892970/server/common')
-            // .setStyle(ButtonStyle.Link);
+            var Play2ServerRust = new ButtonBuilder()
+            .setLabel('MrGOPY Rust Server')
+            .setURL('https://bifrost.snfx.ee/steam/252490/server/common')
+            .setStyle(ButtonStyle.Link);
 
             var Play2SotRow = new ActionRowBuilder()
                 .addComponents(Play2ButtonSot1, Play2ButtonSot2, Play2ButtonSot3);
@@ -110,13 +110,16 @@ module.exports = {
             var Play2GamesRow = new ActionRowBuilder()
                 .addComponents(Play2GameDRG, Play2GameCS2);
 
+            var Play2ServersRow = new ActionRowBuilder()
+            .addComponents(Play2ServerRust);
+
             if (!Play2Channel) {
                 BotLogChannel.send({ content: `[PLAY2] ERROR: Invites channel not found!` });
             }
             Play2Channel.messages.fetch({ limit: 99 }).then(messages => {
                 Play2Channel.bulkDelete(messages, true).then(messages => {
                     BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
-                    Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2SotRow, Play2GamesRow] });
+                    Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2SotRow, Play2GamesRow, Play2ServersRow] });
                 }).catch(console.error);
             });
 
