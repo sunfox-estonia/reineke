@@ -104,6 +104,11 @@ module.exports = {
             .setURL('https://bifrost.snfx.ee/steam/252490/server/common')
             .setStyle(ButtonStyle.Link);
 
+            var Play2ServerValheim = new ButtonBuilder()
+            .setLabel('Sunfox Valheim')
+            .setURL('https://bifrost.snfx.ee/steam/892970/server/common')
+            .setStyle(ButtonStyle.Link);
+
             var Play2SotRow = new ActionRowBuilder()
                 .addComponents(Play2ButtonSot1, Play2ButtonSot2, Play2ButtonSot3);
 
@@ -111,7 +116,7 @@ module.exports = {
                 .addComponents(Play2GameDRG, Play2GameCS2);
 
             var Play2ServersRow = new ActionRowBuilder()
-            .addComponents(Play2ServerRust);
+            .addComponents(Play2ServerRust, Play2ServerValheim);
 
             if (!Play2Channel) {
                 BotLogChannel.send({ content: `[PLAY2] ERROR: Invites channel not found!` });
