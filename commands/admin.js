@@ -160,6 +160,8 @@ module.exports = {
                                             * using merge-images library by combining all comedations-related images
                                             * into one.
                                             */
+
+                                            console.log("dataset2: ", dataset2);
                                             var user_rare_comedations = JSON.parse(JSON.stringify(dataset2));
 
                                             var canvas = createCanvas(620, 450);
@@ -174,7 +176,7 @@ module.exports = {
                                             } else if (user_rare_comedations.length == 2) {
                                                 var img2 = user_rare_comedations[1].comedation_code + "_profile.png";
                                                 var img3 = "null_" + getAchievementEmptyNumber() + "_profile.png";
-                                            } else if (user_rare_comedations.length == 3) {
+                                            } else if (user_rare_comedations.length > 2) {
                                                 var img2 = user_rare_comedations[1].comedation_code + "_profile.png";
                                                 var img3 = user_rare_comedations[2].comedation_code + "_profile.png";
                                             }
