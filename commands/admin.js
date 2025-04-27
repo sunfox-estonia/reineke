@@ -160,8 +160,6 @@ module.exports = {
                                             * using merge-images library by combining all comedations-related images
                                             * into one.
                                             */
-
-                                            console.log("dataset2: ", dataset2);
                                             var user_rare_comedations = JSON.parse(JSON.stringify(dataset2));
 
                                             var canvas = createCanvas(620, 450);
