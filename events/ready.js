@@ -93,10 +93,9 @@ module.exports = {
             .setCustomId('play2_548430')
             .setStyle(ButtonStyle.Secondary);
 
-            var Play2GameCS2 = new ButtonBuilder()
-            .setLabel('🟧 Counter-Strike 2')
-            .setCustomId('play2_730')
-            .setEmoji("<:ico_steam:1246544322321715253>")
+            var Play2GameDarker = new ButtonBuilder()
+            .setLabel('🟠 Dark and Darker')
+            .setCustomId('play2_2016590')
             .setStyle(ButtonStyle.Secondary);
 
             // var Play2ServerRust = new ButtonBuilder()
@@ -104,19 +103,19 @@ module.exports = {
             // .setURL('https://bifrost.snfx.ee/steam/252490/server/common')
             // .setStyle(ButtonStyle.Link);
 
-            var Play2ServerValheim = new ButtonBuilder()
-            .setLabel('Sunfox Valheim')
-            .setURL('https://bifrost.snfx.ee/steam/892970/server/common')
-            .setStyle(ButtonStyle.Link);
+            // var Play2ServerValheim = new ButtonBuilder()
+            // .setLabel('Sunfox Valheim')
+            // .setURL('https://bifrost.snfx.ee/steam/892970/server/common')
+            // .setStyle(ButtonStyle.Link);
 
             var Play2SotRow = new ActionRowBuilder()
                 .addComponents(Play2ButtonSot1, Play2ButtonSot2, Play2ButtonSot3);
 
             var Play2GamesRow = new ActionRowBuilder()
-                .addComponents(Play2GameDRG, Play2GameCS2);
+                .addComponents(Play2GameDRG, Play2GameDarker);
 
-            var Play2ServersRow = new ActionRowBuilder()
-            .addComponents(Play2ServerValheim);
+            // var Play2ServersRow = new ActionRowBuilder()
+            // .addComponents(Play2ServerValheim);
 
             if (!Play2Channel) {
                 BotLogChannel.send({ content: `[PLAY2] ERROR: Invites channel not found!` });
