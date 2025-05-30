@@ -123,7 +123,7 @@ module.exports = {
             Play2Channel.messages.fetch({ limit: 99 }).then(messages => {
                 Play2Channel.bulkDelete(messages, true).then(messages => {
                     BotLogChannel.send({ content: `[AUTOMATION] PLAY2: Invites channel has been cleared.` });
-                    Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2SotRow, Play2GamesRow, Play2ServersRow] });
+                    Play2Channel.send({ embeds: [Play2IntroEmbed],  components: [Play2SotRow, Play2GamesRow] });
                 }).catch(console.error);
             });
 

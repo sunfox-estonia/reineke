@@ -95,10 +95,6 @@ module.exports = {
                                         { name: "Присоединяйся к игре!", value: "Чтобы играть вместе, Тебе необходимо установить **"+SteamApp.name+"** на свой компьютер, а также добавить **" + DiscordUser.displayName + "** в список друзей Steam. Сделать это можно на странице по ссылке ниже." },
                                     );
 
-                                /*
-                                * Get app connected achievements from DB
-                                */
-
                                 var JoinLobbyBtn = new ButtonBuilder()
                                     .setLabel('Присоединиться к лобби')
                                     .setURL(BifrostUri)
