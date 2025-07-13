@@ -98,6 +98,11 @@ module.exports = {
             .setCustomId('play2_2016590')
             .setStyle(ButtonStyle.Secondary);
 
+            var Play2GamePEAK = new ButtonBuilder()
+            .setLabel('🟠 PEAK')
+            .setCustomId('play2_3527290')
+            .setStyle(ButtonStyle.Secondary);
+
             // var Play2ServerRust = new ButtonBuilder()
             // .setLabel('MrGOPY Rust Server')
             // .setURL('https://bifrost.snfx.ee/steam/252490/server/common')
@@ -112,7 +117,7 @@ module.exports = {
                 .addComponents(Play2ButtonSot1, Play2ButtonSot2, Play2ButtonSot3);
 
             var Play2GamesRow = new ActionRowBuilder()
-                .addComponents(Play2GameDRG, Play2GameDarker);
+                .addComponents(Play2GameDRG, Play2GameDarker, Play2GamePEAK);
 
             // var Play2ServersRow = new ActionRowBuilder()
             // .addComponents(Play2ServerValheim);
