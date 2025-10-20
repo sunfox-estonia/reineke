@@ -1,6 +1,11 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const config = require('../config.json');
-const fetch = require('node-fetch');
+const downdetector = require('downdetector-api');
+
+/** Check the documentation for downdetector-api library:
+ *  https://github.com/DavideViolante/downdetector-api
+ *  NPM: https://www.npmjs.com/package/downdetector-api
+ */
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,18 +20,12 @@ module.exports = {
     async execute(interaction) {
         const NotificationsChannel = interaction.client.channels.cache.get(config.log_channels.notifictions);
 
-        const htmlResponse = await fetch('http://steamstat.us');
-        const htmlContent = await htmlResponse.text();
-
-        let psaText = null;
-        const psaMatch = htmlContent.match(/<[^>]*id=["']psa["'][^>]*>([\s\S]*?)<\/[^>]+>/i);
-        if (psaMatch && psaMatch[1]) {
-            psaText = psaMatch[1].replace(/<[^>]+>/g, '').trim();
-            if (psaText.length > 0) {
+        if (interaction.options.getSubcommand() === 'steam') {
+            if (isServiceDown('steam')) {
                 var notification_embed = new EmbedBuilder()
                     .setColor(config.colors.primaryBright)
-                    .setTitle("Внимание!\nВозможны проблемы в работе\u1CBC<:ico_steam:1246544322321715253>Steam!")
-                    .setDescription("Информация с сайта [steamstat.us](https://steamstat.us/):\n```" + psaText + "```")
+                    .setTitle("Внимание!\nВозможны проблемы в работе <:ico_steam:1246544322321715253>Steam!")
+                    .setDescription("Информация с сайта [downdetector.com/steam](https://downdetector.com/status/steam/)")
                     .setTimestamp()
                     .setFooter({
                         iconURL: config.ui.icon_url,
@@ -40,3 +39,30 @@ module.exports = {
         }
     }
 };
+
+function isServiceDown(serviceName) {
+    /** Possible service names:
+     * "steam",
+     * "discord",
+     * "epicgames",
+     * "xbox-live",
+     * "playstation-network"
+     */
+
+    const status = downdetector.getServiceStatus(serviceName);
+    if (!status || !Array.isArray(status.reports) || status.reports.length === 0) {
+        return false;
+        console.log("No status reports available for service: " + serviceName);
+    }
+    console.log("Status reports for " + serviceName + ": ", status.reports);
+    const latestThree = [...status.reports]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 3);
+
+    const sum = latestThree.reduce((acc, r) => acc + (Number(r.value) || 0), 0);
+    if (sum > 30) {
+        return true;
+    } else {
+        return false;
+    }
+}

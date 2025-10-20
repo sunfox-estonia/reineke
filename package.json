@@ -20,7 +20,8 @@
         "steamapi":"2.4.2",
         "moment":"*",
         "moment-timezone":"*",
-        "canvas":"*"
+        "canvas":"*",
+        "downdetector-api":"*"
     },
     "repository": {
         "type": "git",
